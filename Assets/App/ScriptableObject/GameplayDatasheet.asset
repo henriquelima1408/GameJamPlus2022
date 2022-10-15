@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37783a7f62929fa479cbb4b4c5dfceb5, type: 3}
+  m_Name: GameplayDatasheet
+  m_EditorClassIdentifier: 
+  tileMapData:
+    tilePrefab: {fileID: 4685409955042625782, guid: 2820511cb054ae94da7342d42ce9cd36, type: 3}
+    midBottomTile: {fileID: 21300000, guid: 380a79b53a8c0554faa0d5ac0d148cd3, type: 3}
+    sideBottonTile: {fileID: 21300000, guid: a3e37b7c9e9b7374dad13f62f562d338, type: 3}
+    midTile: {fileID: 21300000, guid: 819e57053323c6f4c9705c50886df6d6, type: 3}
+    topTile: {fileID: 21300000, guid: 07055f0d446a2d84f939afff0fb24e8d, type: 3}
+    sideTile: {fileID: 21300000, guid: 44bcf1cee714bd44abdc7084fb2edcf8, type: 3}
+    topSideTile: {fileID: 21300000, guid: ca888709efbc6a34a82ca65beca13591, type: 3}
+  gridSize: {x: 10, y: 10}
+  playerCameraSpd: 5
+  buildDatas:
+  - {fileID: 11400000, guid: 85de5c59502c8e247b91fdcdeea39f73, type: 2}
