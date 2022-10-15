@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace App.Game.Gameplay
 {
-    public static class BuildPattern 
+    public static class BuildPattern
     {
         public static IEnumerable<Vector2Int> GetBuildPattern(BuildPatternType buildPatternType)
         {
@@ -21,8 +21,22 @@ namespace App.Game.Gameplay
 
             switch (buildPatternType)
             {
-                case BuildPatternType.AllDirections:                  
-                    return new Vector2Int[] { left, right, down, up, upLeft, upRight, downLeft, downRight };                    
+                case BuildPatternType.EightDirections:
+                    return new Vector2Int[] { left, right, down, up, upLeft, upRight, downLeft, downRight };
+                case BuildPatternType.O:
+                    return new Vector2Int[] { right, down, downRight };
+                case BuildPatternType.I:
+                    return new Vector2Int[] { down, down * 2, down * 3 };
+                case BuildPatternType.S:
+                    return new Vector2Int[] { right, down, downLeft };
+                case BuildPatternType.Z:
+                    return new Vector2Int[] { right, up, upLeft };
+                case BuildPatternType.L:
+                    return new Vector2Int[] { right, up, up * 2 };
+                case BuildPatternType.J:
+                    return new Vector2Int[] { left, up, up * 2 };
+                case BuildPatternType.T:
+                    return new Vector2Int[] { left, right, down };
                 default:
                     break;
             }
@@ -30,8 +44,8 @@ namespace App.Game.Gameplay
             return null;
         }
 
-        
-          
-        
+
+
+
     }
 }

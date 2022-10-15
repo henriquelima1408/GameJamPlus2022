@@ -33,6 +33,13 @@ namespace App.Game.Data
     }
     public enum BuildPatternType
     {
-        AllDirections
+        EightDirections,
+        O,
+        I,
+        S,
+        Z,
+        L,
+        J,
+        T
     }
 }
