@@ -12,7 +12,8 @@ namespace App.Game.Gameplay
 
         float pCameraSpd;
         CellSelector cellSelector;
-        GameplayDatasheet gameplayDatasheet;
+        GameplayManager gameplayManager;
+
 
         const string h = "Horizontal";
         const string v = "Vertical";
@@ -20,19 +21,19 @@ namespace App.Game.Gameplay
         const string tileLayerMask = "Tile";
 
 
-        public void Init(CellSelector cellSelector, float pCameraSpd, GameplayDatasheet gameplayDatasheet)
+        public void Init(GameplayManager gameplayManager, CellSelector cellSelector, float pCameraSpd)
         {
             this.pCameraSpd = pCameraSpd;
+            this.gameplayManager = gameplayManager;
             this.cellSelector = cellSelector;
-            this.gameplayDatasheet = gameplayDatasheet;
         }
 
         private void Update()
         {
-            if (gameplayDatasheet == null) return;
+            if (gameplayManager.CurrentSelectedBuildData == null) return;
 
             Vector2 pos = pCamera.ScreenToWorldPoint(Input.mousePosition);
-            cellSelector.SelectCell(pos, gameplayDatasheet.BuildDatas[0]);
+            cellSelector.SelectCell(pos, gameplayManager.CurrentSelectedBuildData);
 
             float hAxis = Input.GetAxis(h);
             float vAxis = Input.GetAxis(v);

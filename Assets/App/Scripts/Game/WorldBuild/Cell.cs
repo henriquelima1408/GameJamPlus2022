@@ -53,6 +53,8 @@ namespace App.Game.WorldBuild
 
         public void Select(bool isHover)
         {
+            if (!isEditable) return;
+
             if (!isHover)
             {
                 isEditable = false;

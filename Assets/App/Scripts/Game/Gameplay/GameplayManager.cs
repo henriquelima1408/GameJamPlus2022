@@ -4,11 +4,15 @@ using App.Game.Data;
 using App.Game.WorldBuild;
 using App.Game.Gameplay;
 using System;
+using System.Collections.Generic;
 
 public class GameplayManager : MonoSingleton<GameplayManager>
 {
     [SerializeField]
-    private GameplayDatasheet gameplayDatasheet;
+    GameplayDatasheet gameplayDatasheet;
+
+    [SerializeField]
+    GameplayUI gameplayUI;
 
     [SerializeField]
     PlayerCamera playerCameraPrefab;
@@ -18,6 +22,11 @@ public class GameplayManager : MonoSingleton<GameplayManager>
     CellSelector cellSelector;
     TurnController turnController;
 
+    BuildData currentSelectedBuildData;
+
+
+    Dictionary<string, int> buildDataAllowedUse = new Dictionary<string, int>();
+    LevelData levelData;
 
     //TODO Remove it: Just for test
     Action<KeyCode> OnInput;
@@ -29,6 +38,11 @@ public class GameplayManager : MonoSingleton<GameplayManager>
     public PlayerCamera PlayerCamera
     {
         get => playerCamera;
+    }
+    public BuildData CurrentSelectedBuildData { get => currentSelectedBuildData; }
+    public void SetBuildData(BuildData buildData)
+    {
+        currentSelectedBuildData = buildData;
     }
 
     void Awake()
@@ -48,15 +62,22 @@ public class GameplayManager : MonoSingleton<GameplayManager>
 
     }
 
+
+    public void DoTurn() {
+
+        turnController.DoTurn();
+    }
     protected override void Init()
     {
+        levelData = LevelController.Instance.LevelData;
+
         GameObject gridRoot = new GameObject("GridRoot");
 
         gridRoot.transform.position = Vector2.zero;
         gridRoot.transform.parent = transform;
 
         turnController = new TurnController();
-        grid = new WorldGrid(gameplayDatasheet.GridSize, gameplayDatasheet.TileMapData, gridRoot.transform, Vector2.left * 3);
+        grid = new WorldGrid(gameplayDatasheet.TileMapDatas, gridRoot.transform, Vector2.left * 3);
         cellSelector = new CellSelector(grid);
 
         //TODO: Remove it. Its here just to test
@@ -73,15 +94,24 @@ public class GameplayManager : MonoSingleton<GameplayManager>
         {
             if (key == KeyCode.Mouse0)
             {
+                if (UIUtils.IsPointerOverUIElement())
+                {
+                    cellSelector.DeselectCell();
+                    return;
+                }
+
                 if (cellSelector.CurrentSelectedCell != null)
                 {
                     Cell cell = cellSelector.CurrentSelectedCell;
                     if (cell.IsEditable && cell.Build == null)
                     {
-                        BuildData buildData = gameplayDatasheet.BuildDatas[0];
+                        BuildData buildData = currentSelectedBuildData;
                         cell.CreateBuild(buildData, cellSelector.HoverCells, (entity) =>
                         {
-                            turnController.AddBuild((IBuild)entity);
+                            var build = (IBuild)entity;
+                            turnController.AddBuild(build);
+                            buildDataAllowedUse[build.BuildData.Id]--;
+                            currentSelectedBuildData = null;
 
                         });
 
@@ -102,15 +132,26 @@ public class GameplayManager : MonoSingleton<GameplayManager>
                 }
             }
 
-            if (key == KeyCode.Space) { 
-            
+            if (key == KeyCode.Space)
+            {
+
                 turnController.DoTurn();
             }
         };
 
         playerCamera = Instantiate(playerCameraPrefab, transform);
-        playerCamera.transform.position = new Vector3(0, 0, -10);
-        playerCamera.Init(cellSelector, gameplayDatasheet.PlayerCameraSpd, gameplayDatasheet);
+
+        foreach (var buildDataInfo in levelData.BuildDataInfo)
+        {
+            buildDataAllowedUse[buildDataInfo.BuildData.Id] = buildDataInfo.UseCount;
+        }
+        playerCamera.Init(this, cellSelector, gameplayDatasheet.PlayerCameraSpd);
+        gameplayUI.Init(this, levelData);
+    }
+
+    public bool IsPossibleToSelectBuild(string buildID)
+    {
+        return buildDataAllowedUse[buildID] > 0;
     }
 
     private void Update()
@@ -128,4 +169,5 @@ public class GameplayManager : MonoSingleton<GameplayManager>
             OnInput?.Invoke(KeyCode.Space);
         }
     }
+
 }

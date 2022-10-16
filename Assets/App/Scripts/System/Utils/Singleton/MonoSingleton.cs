@@ -5,6 +5,11 @@ namespace App.System.Utils
     {
         static T instance;
 
+        public static T GetInstance()
+        {
+            return instance;
+        }
+
         public static T Instance
         {
             get
@@ -23,7 +28,7 @@ namespace App.System.Utils
             {
                 instance?.Dispose();
 
-                instance = value;                
+                instance = value;
                 instance?.Init();
             }
         }

@@ -26,8 +26,18 @@ namespace App.Game.Gameplay
         }
 
         public Cell CurrentSelectedCell { get => currentSelectedCell; }
-        public HashSet<Cell> HoverCells { get => hoverCells;}
+        public HashSet<Cell> HoverCells { get => hoverCells; }
 
+        public void DeselectCell()
+        {
+
+            currentSelectedCell?.Deselect();
+            foreach (var cell in hoverCells)
+            {
+                cell?.Deselect();
+            }
+            currentSelectedCell = null;
+        }
         public void SelectCell(Vector2 pos, BuildData buildData)
         {
             Cell newCell = worldGrid.GetCellInPosition(pos);
@@ -61,6 +71,10 @@ namespace App.Game.Gameplay
                 {
                     newCell?.Deselect();
                 }
+            }
+            else
+            {
+                DeselectCell();
             }
 
         }

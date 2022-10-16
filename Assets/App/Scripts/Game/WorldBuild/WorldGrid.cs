@@ -1,5 +1,7 @@
 using UnityEngine;
 using App.Game.Data;
+using System.Collections.Generic;
+using App.Game.Gameplay;
 
 namespace App.Game.WorldBuild
 {
@@ -9,30 +11,51 @@ namespace App.Game.WorldBuild
         readonly Vector2Int gridSize;
         readonly Vector2 cellSpriteSize;
         readonly Vector2 cellCollisionSize;
-        readonly TileMapData tileMapData;
+        readonly TileMapData[] tileMapDatas;
         readonly Vector2 gridSpawnPoint;
         readonly Transform gridParent;
-
-        public WorldGrid(Vector2Int gridSize, TileMapData tileMapData, Transform gridParent, Vector2 gridSpawnPoint)
+        readonly HashSet<Cell> destinationCells = new HashSet<Cell>();
+        readonly Dictionary<Color, TileType> textureDescriptor = new Dictionary<Color, TileType>
         {
-            this.gridSize = gridSize;
-            this.tileMapData = tileMapData;
+            { Color.white,TileType.Wasteland },
+            { Color.black,TileType.Stone  },
+            { Color.red,TileType.Destination },
+            { Color.green,TileType.None },
+        };
+
+        public Vector2Int GridSize => gridSize;
+
+        public  HashSet<Cell> DestinationCells => destinationCells;
+
+        enum TileType
+        {
+            None = 0,
+            Wasteland = 1,
+            Stone = 2,
+            Destination = 3
+        }
+
+        public WorldGrid(TileMapData[] tileMapData, Transform gridParent, Vector2 gridSpawnPoint)
+        {
+            var mapTexture = LevelController.Instance.LevelData.MapTexture;
+
+            this.gridSize = new Vector2Int(mapTexture.width, mapTexture.height);
+            this.tileMapDatas = tileMapData;
             this.gridSpawnPoint = gridSpawnPoint;
             this.gridParent = gridParent;
 
-            SpriteRenderer spriteRenderer = tileMapData.TilePrefab.GetComponent<SpriteRenderer>();
-            this.cellSpriteSize = spriteRenderer.size;
-
-            BoxCollider2D boxCollider2D = tileMapData.TilePrefab.GetComponent<BoxCollider2D>();
+            BoxCollider2D boxCollider2D = tileMapData[0].TilePrefab.GetComponent<BoxCollider2D>();
             this.cellCollisionSize = boxCollider2D.size;
 
+            SpriteRenderer spriteRenderer = tileMapData[0].TilePrefab.GetComponent<SpriteRenderer>();
+            this.cellSpriteSize = cellCollisionSize;
 
             this.cells = new Cell[gridSize.x, gridSize.y];
 
-            SpawnGrid();
+            SpawnGrid(mapTexture);
         }
 
-        void SpawnGrid()
+        void SpawnGrid(Texture2D texture2D)
         {
             Vector2 spawnPos;
             for (int x = 0; x < gridSize.x; x++)
@@ -41,21 +64,39 @@ namespace App.Game.WorldBuild
                 {
                     spawnPos = gridSpawnPoint + new Vector2(x * cellSpriteSize.x, y * cellSpriteSize.y);
 
-                    GameObject cell = MonoBehaviour.Instantiate(tileMapData.TilePrefab);
-                    cell.transform.position = spawnPos;
-                    cell.transform.parent = gridParent;
-                    cell.name = $"Cell {x} - {y}";
+                    var c = texture2D.GetPixel(x, y);
 
-                    SpriteRenderer cellSpriteRenderer = cell.GetComponent<SpriteRenderer>();
-                    cellSpriteRenderer.sprite = FindTileSprite(gridSize, new Vector2Int(x, y));
+                    var cellType = TileType.None;
+                    textureDescriptor.TryGetValue(c, out cellType);
+
+                    var tileMapData = tileMapDatas[(int)cellType];
+
+                    GameObject cellObj = MonoBehaviour.Instantiate(tileMapData.TilePrefab);
+                    cellObj.transform.position = spawnPos;
+                    cellObj.transform.parent = gridParent;
+                    cellObj.name = $"Cell {x} - {y}";
+
+
+
+                    SpriteRenderer cellSpriteRenderer = cellObj.GetComponent<SpriteRenderer>();
+                    cellSpriteRenderer.sprite = FindTileSprite(tileMapData, gridSize, new Vector2Int(x, y));
                     cellSpriteRenderer.flipX = x == 0;
 
-                    cells[x, y] = new Cell(new Vector2Int(x, y), cell, true);
+
+                    var cell = new Cell(new Vector2Int(x, y), cellObj, cellType == TileType.Wasteland);
+                    cells[x, y] = cell;
+
+                    if (cellType == TileType.Destination)
+                    {
+                        destinationCells.Add(cell);
+                    }
+
                 }
             }
         }
 
-        Sprite FindTileSprite(Vector2Int gridSize, Vector2Int currentPoint)
+
+        Sprite FindTileSprite(TileMapData tileMapData, Vector2Int gridSize, Vector2Int currentPoint)
         {
             bool isSide = currentPoint.x == 0 || currentPoint.x == gridSize.x - 1;
             bool isTop = currentPoint.y == gridSize.y - 1;
@@ -108,6 +149,37 @@ namespace App.Game.WorldBuild
             if (deltaPos.x < 0 || deltaPos.x >= gridSize.x || deltaPos.y < 0 || deltaPos.y >= gridSize.y) return null;
 
             return cells[deltaPos.x, deltaPos.y];
+        }
+
+        public IEnumerable<Cell> GetNeightbors(Cell cell)
+        {
+            var outElements = new List<Cell>();
+
+            var leftCell = GetCellInPosition(cell.CellPos - Vector2Int.right);
+            var right = GetCellInPosition(cell.CellPos + Vector2Int.right);
+            var top = GetCellInPosition(cell.CellPos + Vector2Int.up);
+            var down = GetCellInPosition(cell.CellPos - Vector2Int.up);
+
+
+            if (leftCell != null)
+            {
+                outElements.Add(leftCell);
+            }
+            if (right != null)
+            {
+                outElements.Add(right);
+            }
+            if (top != null)
+            {
+                outElements.Add(top);
+            }
+            if (down != null)
+            {
+                outElements.Add(down);
+            }
+
+
+            return outElements;
         }
     }
 }

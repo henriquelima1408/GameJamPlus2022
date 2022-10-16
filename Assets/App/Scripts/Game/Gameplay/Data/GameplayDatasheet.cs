@@ -6,7 +6,7 @@ namespace App.Game.Data
     public class GameplayDatasheet : ScriptableObject
     {
         [SerializeField]
-        TileMapData tileMapData;
+        TileMapData[] tileMapDatas;
 
         [SerializeField]
         Vector2Int gridSize;
@@ -19,7 +19,7 @@ namespace App.Game.Data
         BuildData[] buildDatas;
 
         public Vector2Int GridSize { get => gridSize; }
-        public TileMapData TileMapData { get => tileMapData; }
+        public TileMapData[] TileMapDatas { get => tileMapDatas; }
         public float PlayerCameraSpd { get => playerCameraSpd; }
         public BuildData[] BuildDatas { get => buildDatas; }
     }
