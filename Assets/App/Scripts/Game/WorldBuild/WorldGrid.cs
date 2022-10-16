@@ -12,6 +12,7 @@ namespace App.Game.WorldBuild
         readonly Vector2 cellSpriteSize;
         readonly Vector2 cellCollisionSize;
         readonly TileMapData[] tileMapDatas;
+        readonly LevelController levelController;
         readonly Vector2 gridSpawnPoint;
         readonly Transform gridParent;
         readonly HashSet<Cell> destinationCells = new HashSet<Cell>();
@@ -27,7 +28,7 @@ namespace App.Game.WorldBuild
 
         public HashSet<Cell> DestinationCells => destinationCells;
 
-        enum TileType
+        public enum TileType
         {
             None = 0,
             Wasteland = 1,
@@ -39,6 +40,7 @@ namespace App.Game.WorldBuild
         {
             var mapTexture = LevelController.Instance.LevelData.MapTexture;
 
+            this.levelController = LevelController.Instance;
             this.gridSize = new Vector2Int(mapTexture.width, mapTexture.height);
             this.tileMapDatas = tileMapData;
             this.gridSpawnPoint = gridSpawnPoint;
@@ -76,8 +78,6 @@ namespace App.Game.WorldBuild
                     cellObj.transform.parent = gridParent;
                     cellObj.name = $"Cell {x} - {y}";
 
-
-
                     SpriteRenderer cellSpriteRenderer = cellObj.GetComponent<SpriteRenderer>();
                     cellSpriteRenderer.sprite = FindTileSprite(tileMapData, gridSize, new Vector2Int(x, y));
                     cellSpriteRenderer.flipX = x == 0;
@@ -86,11 +86,25 @@ namespace App.Game.WorldBuild
                     var cell = new Cell(new Vector2Int(x, y), cellObj, cellType == TileType.Wasteland, cellType == TileType.Destination);
                     cells[x, y] = cell;
 
+                    var destinationFlip = false;
                     if (cellType == TileType.Destination)
                     {
                         destinationCells.Add(cell);
+                        destinationFlip = destinationCells.Count == 2;
                     }
 
+                    if (cellType == TileType.Stone || cellType == TileType.Destination)
+                    {
+                        var prefab = levelController.GetTileAsset(cellType);
+                        var asset = MonoBehaviour.Instantiate(prefab, cell.Self.transform);
+                        var sprite = asset.GetComponent<SpriteRenderer>();
+
+                        sprite.sortingOrder = 1;
+                        if (destinationFlip)
+                        {
+                            sprite.flipX = true;
+                        }
+                    }
                 }
             }
         }
@@ -154,6 +168,6 @@ namespace App.Game.WorldBuild
         public Cell GetCell(Vector2Int pos)
         {
             return cells[pos.x, pos.y];
-        }        
+        }
     }
 }

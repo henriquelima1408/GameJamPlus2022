@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using UnityEngine;
 using App.System.Utils;
+using System;
+using static App.Game.WorldBuild.WorldGrid;
 
 namespace App.Game.Gameplay
 {
@@ -11,6 +13,12 @@ namespace App.Game.Gameplay
 
         [SerializeField]
         int currentLevelDataIndex;
+
+        [SerializeField]
+        GameObject destinationPrefab;
+
+        [SerializeField]
+        GameObject stonePrefab;       
 
         private void Awake()
         {
@@ -28,7 +36,7 @@ namespace App.Game.Gameplay
 
         }
 
-        public LevelData LevelData => levelDatas[currentLevelDataIndex];
+        public LevelData LevelData => levelDatas[currentLevelDataIndex];        
 
         public void SetNextLevel()
         {
@@ -47,5 +55,19 @@ namespace App.Game.Gameplay
         {
             DontDestroyOnLoad(gameObject);
         }
+
+        public GameObject GetTileAsset(TileType cellType)
+        {
+            if (cellType == TileType.Stone)
+                return stonePrefab;
+
+            if (cellType == TileType.Destination)
+                return destinationPrefab;
+
+
+            return null;
+        }
+
+
     }
 }

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: I
   m_EditorClassIdentifier: 
   id: I
-  prefab: {fileID: 4685409955042625782, guid: e0b8ee571eb7da2408f5d45f53cc4834, type: 3}
+  prefab: {fileID: 1425923766074597617, guid: 390ff321cf10d9b4ea0128c7de9c17a4, type: 3}
   isStaticBuild: 0
   buildPattern: 2
   areaRadius: 1

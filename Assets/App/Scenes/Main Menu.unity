@@ -803,6 +803,18 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -380873752861129934, guid: 5429433c4458fd34aa18e5e422b1b38c, type: 3}
+      propertyPath: bgmVolume
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -380873752861129934, guid: 5429433c4458fd34aa18e5e422b1b38c, type: 3}
+      propertyPath: menuMusic
+      value: 
+      objectReference: {fileID: 8300000, guid: 386f1f7e503c8d24999257fd04661ab2, type: 3}
+    - target: {fileID: -380873752861129934, guid: 5429433c4458fd34aa18e5e422b1b38c, type: 3}
+      propertyPath: sfxvolume
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5339017075687806420, guid: 5429433c4458fd34aa18e5e422b1b38c, type: 3}
       propertyPath: m_RootOrder
       value: 3
@@ -904,26 +916,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2101791143345003843, guid: 07a08588186d9094ab8d12b9be10e841, type: 3}
-      propertyPath: levelDatas.Array.size
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 2101791143345003843, guid: 07a08588186d9094ab8d12b9be10e841, type: 3}
-      propertyPath: levelDatas.Array.data[0]
-      value: 
-      objectReference: {fileID: 11400000, guid: 3ea31d14856968e4daba46d55f2dd260, type: 2}
-    - target: {fileID: 2101791143345003843, guid: 07a08588186d9094ab8d12b9be10e841, type: 3}
-      propertyPath: levelDatas.Array.data[1]
-      value: 
-      objectReference: {fileID: 11400000, guid: e01c6ca4dc3fa1d4b8dec40d03a59def, type: 2}
-    - target: {fileID: 2101791143345003843, guid: 07a08588186d9094ab8d12b9be10e841, type: 3}
-      propertyPath: levelDatas.Array.data[2]
-      value: 
-      objectReference: {fileID: 11400000, guid: bdbeb75fe58f51f43b6d4f03802f6595, type: 2}
-    - target: {fileID: 2101791143345003843, guid: 07a08588186d9094ab8d12b9be10e841, type: 3}
-      propertyPath: levelDatas.Array.data[3]
-      value: 
-      objectReference: {fileID: 11400000, guid: 307f71bc055d7be4bb5f85124f327483, type: 2}
     - target: {fileID: 2101791143345003844, guid: 07a08588186d9094ab8d12b9be10e841, type: 3}
       propertyPath: m_Name
       value: LevelController
