@@ -3,6 +3,7 @@ using UnityEngine;
 using App.System.Utils;
 using System;
 using static App.Game.WorldBuild.WorldGrid;
+using App.System.Sound;
 
 namespace App.Game.Gameplay
 {
@@ -39,8 +40,9 @@ namespace App.Game.Gameplay
                 return;
             }
 
-            Instance = this;
+            Instance = this;                       
         }
+        
 
         protected override void Dispose()
         {

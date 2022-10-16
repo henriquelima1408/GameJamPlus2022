@@ -46,7 +46,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   audioSource: {fileID: -1388538154572605389}
-  menuMusic: {fileID: 0}
+  menuMusic: {fileID: 8300000, guid: 8765e489441f19044a5ace101ec56766, type: 3}
+  gamePlayMusic: {fileID: 8300000, guid: f6618e4310b6d40469afc44a314ff316, type: 3}
+  bgmVolume: 1
+  sfxvolume: 1
 --- !u!82 &-1388538154572605389
 AudioSource:
   m_ObjectHideFlags: 0
@@ -58,10 +61,10 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
-  Loop: 0
+  Loop: 1
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0

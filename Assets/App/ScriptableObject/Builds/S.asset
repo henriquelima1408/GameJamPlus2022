@@ -15,6 +15,6 @@ MonoBehaviour:
   id: S
   prefab: {fileID: 1425923766074597617, guid: 390ff321cf10d9b4ea0128c7de9c17a4, type: 3}
   isStaticBuild: 0
-  buildPattern: 3
+  buildPattern: 4
   areaRadius: 1
   updateFrequency: 1

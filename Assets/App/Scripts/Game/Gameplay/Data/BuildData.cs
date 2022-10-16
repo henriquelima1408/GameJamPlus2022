@@ -24,22 +24,39 @@ namespace App.Game.Data
         [SerializeField]
         int updateFrequency;
 
+        [SerializeField]
+        Sprite buildSprite;
+
         public string Id { get => id; }
         public GameObject Prefab { get => prefab; }
         public bool IsStaticBuild { get => isStaticBuild; }
         public int UpdateFrequency { get => updateFrequency; }
         public int AreaRadius { get => areaRadius; }
         public BuildPatternType BuildPattern { get => buildPattern; }
+        public Sprite BuildSprite { get => buildSprite; }
     }
     public enum BuildPatternType
     {
         EightDirections,
         O,
-        I,
+        I1,
+        I2,
         S,
+        S1,
+        S2,
+        S3,
         Z,
-        L,
+        L1,
+        L2,
+        L3,
+        L4,
+        L5,
+        L6,
         J,
-        T
+        T1,
+        T2,
+        T3,
+        T4,
+        Y1
     }
 }

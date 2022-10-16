@@ -52,10 +52,9 @@ namespace App.Game.Gameplay
 
             foreach (var cell in cellsInArea)
             {
-                if (cell.IsEditable)
+                if (cell.IsEditable || cell.IsInPreviewState)
                 {
-                    cell.Deselect();
-                    break;
+                    cell.Deselect();                    
                 }
             }
 

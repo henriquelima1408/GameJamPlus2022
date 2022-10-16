@@ -7,6 +7,7 @@ namespace App.System.Sound
     {
         [SerializeField] AudioSource audioSource;
         [SerializeField] AudioClip menuMusic;
+        [SerializeField] AudioClip gamePlayMusic;
 
         bool isSoundEnabled = false;
 
@@ -18,6 +19,25 @@ namespace App.System.Sound
         public float BgmVolume { get => bgmVolume; }
         public float Sfxvolume { get => sfxvolume; }
 
+        int index = 0;
+
+        public void SetMusic(int i)
+        {
+            if (i == index) return;
+
+            if (i == 0)
+            {
+                audioSource.clip = menuMusic;
+
+            }
+            else
+            {
+                audioSource.clip = gamePlayMusic;
+            }
+
+            audioSource.Play();
+            index = i;
+        }
 
         public void UpdateBGM(float volume)
         {

@@ -14,12 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mapTexture: {fileID: 2800000, guid: 8acdfe9a610a56a48ac3d844bd4ec37f, type: 3}
   buildDataInfo:
-  - buildData: {fileID: 11400000, guid: f3e0f5c9182dce949924abbb99203d71, type: 2}
+  - buildData: {fileID: 11400000, guid: e9d9197bb2aa81543adecb173a7a905d, type: 2}
     useCount: 1
-  - buildData: {fileID: 11400000, guid: f6dd42ff7a8a00047a3ba23db1bc14c9, type: 2}
+  - buildData: {fileID: 11400000, guid: b7ee8f3b8bbdbc34ea8886551d88546c, type: 2}
     useCount: 1
-  - buildData: {fileID: 11400000, guid: 1825ead58bfb1334293a59cc7c7ba662, type: 2}
+  - buildData: {fileID: 11400000, guid: 16759671dcb15914f93295f1bf3a1b29, type: 2}
     useCount: 1
-  - buildData: {fileID: 11400000, guid: c3c4ef4cbe0e3d04eb2734ae80178a20, type: 2}
+  - buildData: {fileID: 11400000, guid: cdbc648143514144a82a9cb782c95df0, type: 2}
     useCount: 1
   maxTurnCount: 30

@@ -56,12 +56,14 @@ public class TurnController
     public void DoTurn()
     {
         aiUpdater.DoTurn();
-        buildUpdater.DoTurn();
+        buildUpdater.DoTurn();        
         if (PathChecker.IsPathValid(worldGrid))
         {
             OnVictory?.Invoke();
             Debug.Log("---------------------------Vitória");
         }
+
+        OnTurnFinished?.Invoke();
     }
 
     public void Dispose()

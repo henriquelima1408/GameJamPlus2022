@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 628062079f1575f44b988d3785f8206d, type: 3}
+  m_Name: Level 6
+  m_EditorClassIdentifier: 
+  mapTexture: {fileID: 2800000, guid: 81533399c42b80a498b7a71ad758d664, type: 3}
+  buildDataInfo:
+  - buildData: {fileID: 11400000, guid: 18b5fe9703c8b9b41be3c1807813db6c, type: 2}
+    useCount: 1
+  - buildData: {fileID: 11400000, guid: 3f4abd248ee942c41a6eb6c940693c94, type: 2}
+    useCount: 1
+  - buildData: {fileID: 11400000, guid: 971d694f7058a4342b4f7bf59c7a048b, type: 2}
+    useCount: 1
+  - buildData: {fileID: 11400000, guid: 16759671dcb15914f93295f1bf3a1b29, type: 2}
+    useCount: 1
+  - buildData: {fileID: 11400000, guid: a8f715251b72e364780a5d2942fb404a, type: 2}
+    useCount: 1
+  - buildData: {fileID: 11400000, guid: 971d694f7058a4342b4f7bf59c7a048b, type: 2}
+    useCount: 1
+  maxTurnCount: 30

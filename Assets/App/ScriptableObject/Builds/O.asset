@@ -18,3 +18,4 @@ MonoBehaviour:
   buildPattern: 1
   areaRadius: 1
   updateFrequency: 1
+  buildSprite: {fileID: 21300000, guid: 3000aa9e046abe941ae4ff6ea384ed8a, type: 3}

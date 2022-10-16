@@ -21,7 +21,7 @@ public class GameplayUI : MonoBehaviour
     [SerializeField] Button resumeLevelButton;
     [SerializeField] Button restartLevelButton;
     [SerializeField] Button quitButton;
-
+    
 
     int currentTurnCount = 1;
     LevelData levelData;
@@ -50,9 +50,8 @@ public class GameplayUI : MonoBehaviour
 
         for (int i = 0; i < levelData.BuildDataInfo.Length; i++)
         {
-            var b = Instantiate<BuildButton>(buildButtonPrefab, buildButtonContentTransform);
-            b.GetComponentInChildren<Text>().text = levelData.BuildDataInfo[i].BuildData.Id;
-            b.Init(i, (index) =>
+            var b = Instantiate<BuildButton>(buildButtonPrefab, buildButtonContentTransform);            
+            b.Init(i, levelData.BuildDataInfo[i].BuildData.BuildSprite, (index) =>
             {
                 if (gameplayManager.IsPossibleToSelectBuild(levelData.BuildDataInfo[index].BuildData.Id))
                 {

@@ -6,6 +6,7 @@ using App.Game.Gameplay;
 using System;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
+using App.System.Sound;
 
 public class GameplayManager : MonoSingleton<GameplayManager>
 {
@@ -53,18 +54,14 @@ public class GameplayManager : MonoSingleton<GameplayManager>
     void Awake()
     {
         Instance = this;
+        SoundController.Instance.SetMusic(1);
     }
 
     protected override void Dispose()
-    {
-        grid = null;
-        playerCamera = null;
-        gameplayDatasheet = null;
-        cellSelector = null;
-
+    {        
         turnController.Dispose();
-        turnController = null;
 
+        SoundController.Instance.SetMusic(0);
         if (resetLevel)
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
@@ -76,10 +73,54 @@ public class GameplayManager : MonoSingleton<GameplayManager>
 
     }
 
+    bool IsBuildingSomething()
+    {
+        var builds = turnController.BuildUpdater.PlayerBuilds;
+
+        bool isBuildingSomething = false;
+        foreach (var item in builds.Values)
+        {
+            if (item == null) continue;
+
+            var cellsInArea = item.CellsInArea;
+
+            foreach (var cell in cellsInArea)
+            {
+                if (cell.IsEditable)
+                {
+                    isBuildingSomething = true;
+                    break;
+                }
+            }
+        }
+
+        return isBuildingSomething;
+    }
+
+    bool ThereIsSomethingToPut()
+    {
+        foreach (var item in buildDataAllowedUse.Values)
+        {
+            if (item > 0)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public void DoTurn()
     {
+        if (IsBuildingSomething())
+        {
+            turnController.DoTurn();
+        }
+    }
 
-        turnController.DoTurn();
+    void CheckLoose()
+    {
+
+        if (!IsBuildingSomething() && !ThereIsSomethingToPut()) Quit();
     }
     protected override void Init()
     {
@@ -93,6 +134,8 @@ public class GameplayManager : MonoSingleton<GameplayManager>
         turnController = new TurnController();
         grid = new WorldGrid(turnController, gameplayDatasheet.TileMapDatas, gridRoot.transform, Vector2.left * 3);
         turnController.Init(grid);
+
+        turnController.OnTurnFinished += CheckLoose;
         turnController.OnVictory += Quit;
         cellSelector = new CellSelector(grid);
 

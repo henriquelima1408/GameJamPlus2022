@@ -50,6 +50,10 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 5cc1928451f059e47824e6793d1f3d71, type: 2}
   - {fileID: 11400000, guid: b06469ea7b7029a4aac160992187f84f, type: 2}
   - {fileID: 11400000, guid: 02af01ff74e3d394883f294baa2a97a9, type: 2}
+  - {fileID: 11400000, guid: 3c32db1a1c0ed354e8c6448fb35fbe6a, type: 2}
+  - {fileID: 11400000, guid: d336092a49cc91b4d9ef58ef4c43d22d, type: 2}
+  - {fileID: 11400000, guid: 8f9ce3dfda1005d408d308a38720f775, type: 2}
+  - {fileID: 11400000, guid: 7b8ad9a6f29a04f42a0048a33c22665a, type: 2}
   currentLevelDataIndex: 0
   destinationPrefab: {fileID: 6576819145617916882, guid: ca2a26d737e94904b91cd6a521c85a88, type: 3}
   enemyPrefab: {fileID: 370160685387827158, guid: 595d22821f5153e4ab338c701e8fe557, type: 3}
