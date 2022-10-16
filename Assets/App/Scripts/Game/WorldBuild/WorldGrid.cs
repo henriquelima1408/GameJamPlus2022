@@ -22,6 +22,7 @@ namespace App.Game.WorldBuild
             { Color.black,TileType.Stone  },
             { Color.red,TileType.Destination },
             { Color.green,TileType.None },
+            { Color.blue,TileType.Enemy },
         };
 
         public Vector2Int GridSize => gridSize;
@@ -33,7 +34,8 @@ namespace App.Game.WorldBuild
             None = 0,
             Wasteland = 1,
             Stone = 2,
-            Destination = 3
+            Destination = 3,
+            Enemy =4
         }
 
         public WorldGrid(TileMapData[] tileMapData, Transform gridParent, Vector2 gridSpawnPoint)
@@ -93,7 +95,7 @@ namespace App.Game.WorldBuild
                         destinationFlip = destinationCells.Count == 2;
                     }
 
-                    if (cellType == TileType.Stone || cellType == TileType.Destination)
+                    if (cellType == TileType.Stone || cellType == TileType.Destination || cellType == TileType.Enemy)
                     {
                         var prefab = levelController.GetTileAsset(cellType);
                         var asset = MonoBehaviour.Instantiate(prefab, cell.Self.transform);
@@ -105,6 +107,7 @@ namespace App.Game.WorldBuild
                             sprite.flipX = true;
                         }
                     }
+
                 }
             }
         }

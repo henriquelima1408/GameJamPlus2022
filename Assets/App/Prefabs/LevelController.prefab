@@ -46,10 +46,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelDatas:
   - {fileID: 11400000, guid: 3ea31d14856968e4daba46d55f2dd260, type: 2}
-  - {fileID: 11400000, guid: e01c6ca4dc3fa1d4b8dec40d03a59def, type: 2}
-  - {fileID: 11400000, guid: bdbeb75fe58f51f43b6d4f03802f6595, type: 2}
-  - {fileID: 11400000, guid: 307f71bc055d7be4bb5f85124f327483, type: 2}
+  - {fileID: 11400000, guid: 7cfaab0b7f5d8194fb0bd878c8f9101c, type: 2}
+  - {fileID: 11400000, guid: 5cc1928451f059e47824e6793d1f3d71, type: 2}
+  - {fileID: 11400000, guid: b06469ea7b7029a4aac160992187f84f, type: 2}
+  - {fileID: 11400000, guid: 02af01ff74e3d394883f294baa2a97a9, type: 2}
   currentLevelDataIndex: 0
   destinationPrefab: {fileID: 6576819145617916882, guid: ca2a26d737e94904b91cd6a521c85a88, type: 3}
+  enemyPrefab: {fileID: 370160685387827158, guid: 595d22821f5153e4ab338c701e8fe557, type: 3}
   stonePrefab: {fileID: 1430026389434332468, guid: 6223caa533fe51f42905cb398a84ba17, type: 3}
   previewTile: {fileID: 21300000, guid: 6b4a7a1fe5dc3894195134903080e5eb, type: 3}
+  natureTile: {fileID: 21300000, guid: 70f3bdf49d9f6304b8738d896da54401, type: 3}

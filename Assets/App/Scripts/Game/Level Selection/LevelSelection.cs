@@ -11,12 +11,24 @@ public class LevelSelection : MonoBehaviour
     Button backButton;
 
     [SerializeField]
+    Button startButton;
+
+    [SerializeField]
+    Button tutorialButton;
+
+    [SerializeField]
+    Button tutorialButtonClose;
+
+    [SerializeField]
+    GameObject tutorialHolder;
+
+    [SerializeField]
     LevelButton levelButtonPrefab;
 
     [SerializeField]
     Transform contentTransform;
 
-    [SerializeField]
+    
     int levelAmount;
 
     const string gameplaySceneName = "GameplayScene";
@@ -25,14 +37,18 @@ public class LevelSelection : MonoBehaviour
     void Start()
     {
         backButton.onClick.AddListener(() => SceneManager.LoadScene("Main Menu"));
+        tutorialButton.onClick.AddListener(() => tutorialHolder.SetActive(true));
+        tutorialButtonClose.onClick.AddListener(() => tutorialHolder.SetActive(false));
+        startButton.onClick.AddListener(() => SceneManager.LoadScene(gameplaySceneName));
 
+        levelAmount = LevelController.Instance.LevelDatas.Length;
         for (int i = 0; i < levelAmount; i++)
         {
             var levelButton = Instantiate<LevelButton>(levelButtonPrefab, contentTransform);
             levelButton.Init(i, (index) =>
             {
                 LevelController.Instance.SetNextLevel(index);
-                SceneManager.LoadScene(gameplaySceneName);
+                
             });
         }
     }

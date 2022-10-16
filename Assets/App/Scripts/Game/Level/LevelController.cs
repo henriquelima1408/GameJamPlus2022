@@ -18,6 +18,9 @@ namespace App.Game.Gameplay
         GameObject destinationPrefab;
 
         [SerializeField]
+        GameObject enemyPrefab;
+
+        [SerializeField]
         GameObject stonePrefab;
 
         [SerializeField]
@@ -25,6 +28,8 @@ namespace App.Game.Gameplay
 
         [SerializeField]
         Sprite natureTile;
+
+        
 
         private void Awake()
         {
@@ -46,6 +51,7 @@ namespace App.Game.Gameplay
 
         public Sprite PreviewTile { get => previewTile; }
         public Sprite NatureTile { get => natureTile; }
+        public LevelData[] LevelDatas { get => levelDatas; }
 
         public void SetNextLevel()
         {
@@ -72,6 +78,9 @@ namespace App.Game.Gameplay
 
             if (cellType == TileType.Destination)
                 return destinationPrefab;
+
+            if (cellType == TileType.Enemy)
+                return enemyPrefab;
 
 
             return null;
