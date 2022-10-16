@@ -33,6 +33,9 @@ public class GameplayManager : MonoSingleton<GameplayManager>
     Action<KeyCode> OnInput;
     const string levelSelectionSceneName = "LevelSelection";
 
+    bool resetLevel = false;
+    bool quit = false;
+
     public WorldGrid Grid
     {
         get => grid;
@@ -57,13 +60,21 @@ public class GameplayManager : MonoSingleton<GameplayManager>
         grid = null;
         playerCamera = null;
         gameplayDatasheet = null;
-        cellSelector = null;        
+        cellSelector = null;
 
         turnController.Dispose();
         turnController = null;
-        SceneManager.LoadScene(levelSelectionSceneName);
-    }
 
+        if (resetLevel)
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        }
+        else
+        {
+            SceneManager.LoadScene(levelSelectionSceneName);
+        }
+
+    }
 
     public void DoTurn()
     {
@@ -81,7 +92,7 @@ public class GameplayManager : MonoSingleton<GameplayManager>
 
         grid = new WorldGrid(gameplayDatasheet.TileMapDatas, gridRoot.transform, Vector2.left * 3);
         turnController = new TurnController(grid);
-        turnController.OnVictory += () => Instance = null;
+        turnController.OnVictory += Quit;
         cellSelector = new CellSelector(grid);
 
         //TODO: Remove it. Its here just to test
@@ -174,4 +185,17 @@ public class GameplayManager : MonoSingleton<GameplayManager>
         }
     }
 
+    public void ResetLevel()
+    {
+        resetLevel = true;
+        Instance = null;
+    }
+
+    public void Quit()
+    {
+
+        quit = true;
+        Instance = null;
+
+    }
 }

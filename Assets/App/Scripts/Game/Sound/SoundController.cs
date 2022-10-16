@@ -10,7 +10,24 @@ namespace App.System.Sound
 
         bool isSoundEnabled = false;
 
-        public bool IsSoundEnabled { get => isSoundEnabled; }
+        [SerializeField]
+        float bgmVolume;
+        [SerializeField]
+        private float sfxvolume;
+
+        public float BgmVolume { get => bgmVolume; }
+        public float Sfxvolume { get => sfxvolume; }
+
+
+        public void UpdateBGM(float volume)
+        {
+            bgmVolume = volume;
+            audioSource.volume = volume;
+        }
+        public void UpdateSFX(float volume)
+        {
+            sfxvolume = volume;
+        }
 
         protected override void Dispose()
         {
