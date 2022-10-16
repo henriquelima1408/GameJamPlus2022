@@ -90,8 +90,9 @@ public class GameplayManager : MonoSingleton<GameplayManager>
         gridRoot.transform.position = Vector2.zero;
         gridRoot.transform.parent = transform;
 
-        grid = new WorldGrid(gameplayDatasheet.TileMapDatas, gridRoot.transform, Vector2.left * 3);
-        turnController = new TurnController(grid);
+        turnController = new TurnController();
+        grid = new WorldGrid(turnController, gameplayDatasheet.TileMapDatas, gridRoot.transform, Vector2.left * 3);
+        turnController.Init(grid);
         turnController.OnVictory += Quit;
         cellSelector = new CellSelector(grid);
 

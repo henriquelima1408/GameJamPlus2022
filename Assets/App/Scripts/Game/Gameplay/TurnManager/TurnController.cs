@@ -14,14 +14,24 @@ public class TurnController
 
     readonly BuildUpdater buildUpdater;
     readonly AIUpdater aiUpdater;
-    readonly WorldGrid worldGrid;
+    WorldGrid worldGrid;
 
-    public TurnController(WorldGrid worldGrid)
+    public BuildUpdater BuildUpdater => buildUpdater;
+
+    public AIUpdater AiUpdater => aiUpdater;
+
+    public TurnController()
     {
-        this.worldGrid = worldGrid;
+
         buildUpdater = new BuildUpdater();
         aiUpdater = new AIUpdater();
     }
+
+    public void Init(WorldGrid worldGrid)
+    {
+        this.worldGrid = worldGrid;
+    }
+
 
     public void AddBuild(IBuild build)
     {
@@ -30,7 +40,7 @@ public class TurnController
 
     public void AddAI(IAICharacter aiCharacter)
     {
-        aiUpdater.AddAICharacter(aiCharacter);
+        aiUpdater.AddAICharacter(aiCharacter);        
     }
 
     public void RemoveBuild(IBuild build)
@@ -45,8 +55,8 @@ public class TurnController
 
     public void DoTurn()
     {
-        buildUpdater.DoTurn();
         aiUpdater.DoTurn();
+        buildUpdater.DoTurn();
         if (PathChecker.IsPathValid(worldGrid))
         {
             OnVictory?.Invoke();

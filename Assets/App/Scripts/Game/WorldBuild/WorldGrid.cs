@@ -16,6 +16,7 @@ namespace App.Game.WorldBuild
         readonly Vector2 gridSpawnPoint;
         readonly Transform gridParent;
         readonly HashSet<Cell> destinationCells = new HashSet<Cell>();
+        readonly TurnController turnController;
         readonly Dictionary<Color, TileType> textureDescriptor = new Dictionary<Color, TileType>
         {
             { Color.white,TileType.Wasteland },
@@ -29,19 +30,33 @@ namespace App.Game.WorldBuild
 
         public HashSet<Cell> DestinationCells => destinationCells;
 
+        public void ClearParents()
+        {
+
+            for (int x = 0; x < gridSize.x; x++)
+            {
+                for (int y = 0; y < gridSize.y; y++)
+                {
+                    cells[x, y].Parent = null;
+                }
+            }
+
+
+        }
         public enum TileType
         {
             None = 0,
             Wasteland = 1,
             Stone = 2,
             Destination = 3,
-            Enemy =4
+            Enemy = 4
         }
 
-        public WorldGrid(TileMapData[] tileMapData, Transform gridParent, Vector2 gridSpawnPoint)
+        public WorldGrid(TurnController turnController, TileMapData[] tileMapData, Transform gridParent, Vector2 gridSpawnPoint)
         {
             var mapTexture = LevelController.Instance.LevelData.MapTexture;
 
+            this.turnController = turnController;
             this.levelController = LevelController.Instance;
             this.gridSize = new Vector2Int(mapTexture.width, mapTexture.height);
             this.tileMapDatas = tileMapData;
@@ -85,11 +100,11 @@ namespace App.Game.WorldBuild
                     cellSpriteRenderer.flipX = x == 0;
 
 
-                    var cell = new Cell(new Vector2Int(x, y), cellObj, cellType == TileType.Wasteland, cellType == TileType.Destination, cellType == TileType.None);
+                    var cell = new Cell(new Vector2Int(x, y), cellObj, cellType == TileType.Wasteland || cellType == TileType.Enemy, cellType == TileType.Destination, cellType == TileType.None);
                     cells[x, y] = cell;
 
                     var destinationFlip = false;
-                    if (cellType == TileType.Destination)
+                    if (cellType == TileType.Destination)   
                     {
                         destinationCells.Add(cell);
                         destinationFlip = destinationCells.Count == 2;
@@ -100,6 +115,13 @@ namespace App.Game.WorldBuild
                         var prefab = levelController.GetTileAsset(cellType);
                         var asset = MonoBehaviour.Instantiate(prefab, cell.Self.transform);
                         var sprite = asset.GetComponent<SpriteRenderer>();
+
+
+                        if (cellType == TileType.Enemy)
+                        {
+                            turnController.AddAI(new AICharacter(turnController, this, cell, asset));
+                        }
+
 
                         sprite.sortingOrder = 1;
                         if (destinationFlip)
@@ -170,6 +192,7 @@ namespace App.Game.WorldBuild
 
         public Cell GetCell(Vector2Int pos)
         {
+            if (pos.x < 0 || pos.x >= GridSize.x || pos.y < 0 || pos.y >= GridSize.y) return null;
             return cells[pos.x, pos.y];
         }
     }

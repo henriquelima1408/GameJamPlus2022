@@ -7,6 +7,8 @@ namespace App.Game.Gameplay
     {
         readonly Dictionary<string, IAICharacter> aiCharacters = new Dictionary<string, IAICharacter>();
 
+        public Dictionary<string, IAICharacter> AiCharacters => aiCharacters;
+
         public void Dispose()
         {
 
@@ -26,7 +28,8 @@ namespace App.Game.Gameplay
 
         public void DoTurn()
         {
-            foreach (KeyValuePair<string, IAICharacter> valuePair in aiCharacters)
+            var pairs = new Dictionary<string, IAICharacter>(aiCharacters); 
+            foreach (KeyValuePair<string, IAICharacter> valuePair in pairs)
             {
                 var character = valuePair.Value;
                 character.Update();
