@@ -916,6 +916,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2101791143345003843, guid: 07a08588186d9094ab8d12b9be10e841, type: 3}
+      propertyPath: natureTile
+      value: 
+      objectReference: {fileID: 21300000, guid: 70f3bdf49d9f6304b8738d896da54401, type: 3}
     - target: {fileID: 2101791143345003844, guid: 07a08588186d9094ab8d12b9be10e841, type: 3}
       propertyPath: m_Name
       value: LevelController

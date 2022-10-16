@@ -17,7 +17,7 @@ namespace App.Game.Gameplay
 
         public bool IsPossibleToSelect(Cell cell)
         {
-            return cell.IsEditable && cell.Build == null;
+            return cell.IsEditable && !cell.IsInPreviewState && cell.Build == null && !cell.IsStatic;
         }
 
         public CellSelector(WorldGrid worldGrid)
@@ -28,29 +28,25 @@ namespace App.Game.Gameplay
         public Cell CurrentSelectedCell { get => currentSelectedCell; }
         public HashSet<Cell> HoverCells { get => hoverCells; }
 
-        public void DeselectCell()
+        public void DeselectCell(Cell cell)
         {
-
-            currentSelectedCell?.Deselect();
-            foreach (var cell in hoverCells)
+            cell?.Deselect();
+            foreach (var c in hoverCells)
             {
-                cell?.Deselect();
+                if (c == null || c.IsInPreviewState) continue;
+                c?.Deselect();
             }
+            hoverCells.Clear();
             currentSelectedCell = null;
         }
         public void SelectCell(Vector2 pos, BuildData buildData)
         {
             Cell newCell = worldGrid.GetCellInPosition(pos);
-
+            
             if (newCell != null)
             {
                 var previousCell = currentSelectedCell;
-                foreach (var cell in hoverCells)
-                {
-                    cell?.Deselect();
-                }
-
-                hoverCells.Clear();
+                DeselectCell(previousCell);                
 
                 if (IsPossibleToSelect(newCell))
                 {
@@ -69,12 +65,13 @@ namespace App.Game.Gameplay
                 }
                 else
                 {
-                    newCell?.Deselect();
+                    if (!newCell.IsInPreviewState)
+                        newCell?.Deselect();
                 }
             }
             else
             {
-                DeselectCell();
+                DeselectCell(currentSelectedCell);
             }
 
         }

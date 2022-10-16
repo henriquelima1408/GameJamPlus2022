@@ -111,7 +111,7 @@ public class GameplayManager : MonoSingleton<GameplayManager>
             {
                 if (UIUtils.IsPointerOverUIElement())
                 {
-                    cellSelector.DeselectCell();
+                    cellSelector.DeselectCell(cellSelector.CurrentSelectedCell);
                     return;
                 }
 

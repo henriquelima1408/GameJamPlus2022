@@ -15,13 +15,17 @@ namespace App.Game.WorldBuild
         readonly SpriteRenderer spriteRenderer;
         bool isEditable;
         bool canBeUsedToPath;
+        bool isInPreviewState;
+        bool isStatic = false;
+
+        Sprite initialSprite;
 
         IBuild build;
         GameObject buildGameObject;
 
         public int X { get => cellPos.x; }
         public int Y { get => cellPos.y; }
-        public int Cost { get; set; }        
+        public int Cost { get; set; }
         public Cell Parent { get; set; }
         public int CostDistance => Cost + Distance;
         public int Distance { get; set; }
@@ -31,13 +35,15 @@ namespace App.Game.WorldBuild
         }
 
 
-        public Cell(Vector2Int cellPos, GameObject self, bool isEditable, bool canBeUsedToPath)
+        public Cell(Vector2Int cellPos, GameObject self, bool isEditable, bool canBeUsedToPath, bool isStatic)
         {
             this.cellPos = cellPos;
             this.self = self;
             this.isEditable = isEditable;
             this.spriteRenderer = self.GetComponent<SpriteRenderer>();
             this.canBeUsedToPath = canBeUsedToPath;
+            initialSprite = spriteRenderer.sprite;
+            this.isStatic = isStatic;   
         }
 
         public Vector2Int CellPos => cellPos;
@@ -45,7 +51,9 @@ namespace App.Game.WorldBuild
         public bool IsEditable { get => isEditable; }
         public IBuild Build { get => build; }
         public GameObject BuildGameObject { get => buildGameObject; }
-        public bool CanBeUsedToPath { get => canBeUsedToPath;}
+        public bool CanBeUsedToPath { get => canBeUsedToPath; }
+        public bool IsInPreviewState { get => isInPreviewState; }
+        public bool IsStatic { get => isStatic; }
 
         public void CreateBuild(BuildData buildData, HashSet<Cell> cellsInArea, Action<IEntity> onBuild)
         {
@@ -59,6 +67,15 @@ namespace App.Game.WorldBuild
             build.OnBuild += onBuild;
             isEditable = false;
             canBeUsedToPath = true;
+            isInPreviewState = true;
+
+            foreach (var c in cellsInArea)
+            {
+                if (c != null)
+                {
+                    c.isInPreviewState = true;
+                }
+            }
 
             Debug.Log($"build {guid} finish");
 
@@ -68,24 +85,26 @@ namespace App.Game.WorldBuild
 
         public void Select(bool isHover)
         {
-            if (!isEditable) return;
+            if (!isEditable) return;            
 
             if (!isHover)
             {
                 isEditable = false;
                 canBeUsedToPath = true;
-                spriteRenderer.color = Color.blue;
+                spriteRenderer.sprite = LevelController.Instance.NatureTile;
             }
             else
             {
-                spriteRenderer.color = Color.red;
+                spriteRenderer.sprite = LevelController.Instance.PreviewTile;
             }
         }
 
         public void Deselect()
         {
             if (!isEditable) return;
-            spriteRenderer.color = Color.white;
+
+            spriteRenderer.sprite = initialSprite;
+            isInPreviewState = false;
         }
 
         public void RemoveBuild()

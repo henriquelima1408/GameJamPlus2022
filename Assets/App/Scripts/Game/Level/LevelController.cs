@@ -18,7 +18,13 @@ namespace App.Game.Gameplay
         GameObject destinationPrefab;
 
         [SerializeField]
-        GameObject stonePrefab;       
+        GameObject stonePrefab;
+
+        [SerializeField]
+        Sprite previewTile;
+
+        [SerializeField]
+        Sprite natureTile;
 
         private void Awake()
         {
@@ -36,7 +42,10 @@ namespace App.Game.Gameplay
 
         }
 
-        public LevelData LevelData => levelDatas[currentLevelDataIndex];        
+        public LevelData LevelData => levelDatas[currentLevelDataIndex];
+
+        public Sprite PreviewTile { get => previewTile; }
+        public Sprite NatureTile { get => natureTile; }
 
         public void SetNextLevel()
         {

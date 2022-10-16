@@ -83,7 +83,7 @@ namespace App.Game.WorldBuild
                     cellSpriteRenderer.flipX = x == 0;
 
 
-                    var cell = new Cell(new Vector2Int(x, y), cellObj, cellType == TileType.Wasteland, cellType == TileType.Destination);
+                    var cell = new Cell(new Vector2Int(x, y), cellObj, cellType == TileType.Wasteland, cellType == TileType.Destination, cellType == TileType.None);
                     cells[x, y] = cell;
 
                     var destinationFlip = false;

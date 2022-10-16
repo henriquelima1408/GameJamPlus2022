@@ -26,6 +26,7 @@ namespace App.Game.Gameplay
             this.buildData = buildData;
             this.self = self;
             this.cellsInArea = new HashSet<Cell>(cellsInArea);
+            
         }
 
         public string GUID => guid;
@@ -48,6 +49,16 @@ namespace App.Game.Gameplay
             onBuild = null;
             onTakeDamage = null;
             onUpdate = null;
+
+            foreach (var cell in cellsInArea)
+            {
+                if (cell.IsEditable)
+                {
+                    cell.Deselect();
+                    break;
+                }
+            }
+
         }
 
         public void TakeDamage(int amount)
