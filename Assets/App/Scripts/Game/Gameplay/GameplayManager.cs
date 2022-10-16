@@ -5,6 +5,7 @@ using App.Game.WorldBuild;
 using App.Game.Gameplay;
 using System;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 
 public class GameplayManager : MonoSingleton<GameplayManager>
 {
@@ -30,6 +31,7 @@ public class GameplayManager : MonoSingleton<GameplayManager>
 
     //TODO Remove it: Just for test
     Action<KeyCode> OnInput;
+    const string levelSelectionSceneName = "LevelSelection";
 
     public WorldGrid Grid
     {
@@ -55,15 +57,16 @@ public class GameplayManager : MonoSingleton<GameplayManager>
         grid = null;
         playerCamera = null;
         gameplayDatasheet = null;
-        cellSelector = null;
+        cellSelector = null;        
 
         turnController.Dispose();
         turnController = null;
-
+        SceneManager.LoadScene(levelSelectionSceneName);
     }
 
 
-    public void DoTurn() {
+    public void DoTurn()
+    {
 
         turnController.DoTurn();
     }
@@ -76,8 +79,9 @@ public class GameplayManager : MonoSingleton<GameplayManager>
         gridRoot.transform.position = Vector2.zero;
         gridRoot.transform.parent = transform;
 
-        turnController = new TurnController();
         grid = new WorldGrid(gameplayDatasheet.TileMapDatas, gridRoot.transform, Vector2.left * 3);
+        turnController = new TurnController(grid);
+        turnController.OnVictory += () => Instance = null;
         cellSelector = new CellSelector(grid);
 
         //TODO: Remove it. Its here just to test

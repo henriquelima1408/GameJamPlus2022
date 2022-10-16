@@ -14,16 +14,30 @@ namespace App.Game.WorldBuild
         readonly GameObject self;
         readonly SpriteRenderer spriteRenderer;
         bool isEditable;
+        bool canBeUsedToPath;
 
         IBuild build;
         GameObject buildGameObject;
 
-        public Cell(Vector2Int cellPos, GameObject self, bool isEditable)
+        public int X { get => cellPos.x; }
+        public int Y { get => cellPos.y; }
+        public int Cost { get; set; }        
+        public Cell Parent { get; set; }
+        public int CostDistance => Cost + Distance;
+        public int Distance { get; set; }
+        public void SetDistance(int targetX, int targetY)
+        {
+            this.Distance = Math.Abs(targetX - X) + Math.Abs(targetY - Y);
+        }
+
+
+        public Cell(Vector2Int cellPos, GameObject self, bool isEditable, bool canBeUsedToPath)
         {
             this.cellPos = cellPos;
             this.self = self;
             this.isEditable = isEditable;
             this.spriteRenderer = self.GetComponent<SpriteRenderer>();
+            this.canBeUsedToPath = canBeUsedToPath;
         }
 
         public Vector2Int CellPos => cellPos;
@@ -31,7 +45,7 @@ namespace App.Game.WorldBuild
         public bool IsEditable { get => isEditable; }
         public IBuild Build { get => build; }
         public GameObject BuildGameObject { get => buildGameObject; }
-
+        public bool CanBeUsedToPath { get => canBeUsedToPath;}
 
         public void CreateBuild(BuildData buildData, HashSet<Cell> cellsInArea, Action<IEntity> onBuild)
         {
@@ -44,6 +58,7 @@ namespace App.Game.WorldBuild
             build = new DynamicBuild(guid, this, buildData, buildGameObject, cellsInArea);
             build.OnBuild += onBuild;
             isEditable = false;
+            canBeUsedToPath = true;
 
             Debug.Log($"build {guid} finish");
 
@@ -58,6 +73,7 @@ namespace App.Game.WorldBuild
             if (!isHover)
             {
                 isEditable = false;
+                canBeUsedToPath = true;
                 spriteRenderer.color = Color.blue;
             }
             else

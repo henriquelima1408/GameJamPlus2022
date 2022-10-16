@@ -1,5 +1,6 @@
 ﻿using App.Game.Gameplay;
 using App.Game.Gameplay.AI;
+using App.Game.WorldBuild;
 using System;
 using System.Collections;
 using UnityEngine;
@@ -9,12 +10,15 @@ public class TurnController
 {
     public Action OnTurnStarted;
     public Action OnTurnFinished;
+    public Action OnVictory;
 
     readonly BuildUpdater buildUpdater;
     readonly AIUpdater aiUpdater;
+    readonly WorldGrid worldGrid;
 
-    public TurnController()
+    public TurnController(WorldGrid worldGrid)
     {
+        this.worldGrid = worldGrid;
         buildUpdater = new BuildUpdater();
         aiUpdater = new AIUpdater();
     }
@@ -43,6 +47,11 @@ public class TurnController
     {
         buildUpdater.DoTurn();
         aiUpdater.DoTurn();
+        if (PathChecker.IsPathValid(worldGrid))
+        {
+            OnVictory?.Invoke();
+            Debug.Log("---------------------------Vitória");
+        }
     }
 
     public void Dispose()

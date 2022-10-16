@@ -1,6 +1,5 @@
 ﻿using App.Game.WorldBuild;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -8,141 +7,87 @@ using UnityEngine;
 
 public static class PathChecker
 {
-
-    class Program
+    public static bool IsPathValid(WorldGrid worldGrid)
     {
-        static void Main(string[] args)
+        var start = worldGrid.DestinationCells.First();
+
+        var finish = worldGrid.DestinationCells.Last();
+
+        start.SetDistance(finish.X, finish.Y);
+
+        var activeCells = new List<Cell>();
+        activeCells.Add(start);
+        var visitedCells = new List<Cell>();
+
+        while (activeCells.Any())
         {
-            List<string> map = new List<string>
+            var checkTile = activeCells.OrderBy(x => x.CostDistance).First();
+
+            if (checkTile.X == finish.X && checkTile.Y == finish.Y)
             {
-                "A          ",
-                "--| |------",
-                "           ",
-                "   |-----| ",
-                "   |     | ",
-                "---|     |B"
-            };
-
-            var start = new Tile();
-            start.Y = map.FindIndex(x => x.Contains("A"));
-            start.X = map[start.Y].IndexOf("A");
-
-
-            var finish = new Tile();
-            finish.Y = map.FindIndex(x => x.Contains("B"));
-            finish.X = map[finish.Y].IndexOf("B");
-
-            start.SetDistance(finish.X, finish.Y);
-
-            var activeTiles = new List<Tile>();
-            activeTiles.Add(start);
-            var visitedTiles = new List<Tile>();
-
-            while (activeTiles.Any())
-            {
-                var checkTile = activeTiles.OrderBy(x => x.CostDistance).First();
-
-                if (checkTile.X == finish.X && checkTile.Y == finish.Y)
-                {
-                    //We found the destination and we can be sure (Because the the OrderBy above)
-                    //That it's the most low cost option. 
-                    var tile = checkTile;
-                    Console.WriteLine("Retracing steps backwards...");
-                    while (true)
-                    {
-                        Console.WriteLine($"{tile.X} : {tile.Y}");
-                        if (map[tile.Y][tile.X] == ' ')
-                        {
-                            var newMapRow = map[tile.Y].ToCharArray();
-                            newMapRow[tile.X] = '*';
-                            map[tile.Y] = new string(newMapRow);
-                        }
-                        tile = tile.Parent;
-                        if (tile == null)
-                        {
-                            Console.WriteLine("Map looks like :");
-                            map.ForEach(x => Console.WriteLine(x));
-                            Console.WriteLine("Done!");
-                            return;
-                        }
-                    }
-                }
-
-                visitedTiles.Add(checkTile);
-                activeTiles.Remove(checkTile);
-
-                var walkableTiles = GetWalkableTiles(map, checkTile, finish);
-
-                foreach (var walkableTile in walkableTiles)
-                {
-                    //We have already visited this tile so we don't need to do so again!
-                    if (visitedTiles.Any(x => x.X == walkableTile.X && x.Y == walkableTile.Y))
-                        continue;
-
-                    //It's already in the active list, but that's OK, maybe this new tile has a better value (e.g. We might zigzag earlier but this is now straighter). 
-                    if (activeTiles.Any(x => x.X == walkableTile.X && x.Y == walkableTile.Y))
-                    {
-                        var existingTile = activeTiles.First(x => x.X == walkableTile.X && x.Y == walkableTile.Y);
-                        if (existingTile.CostDistance > checkTile.CostDistance)
-                        {
-                            activeTiles.Remove(existingTile);
-                            activeTiles.Add(walkableTile);
-                        }
-                    }
-                    else
-                    {
-                        //We've never seen this tile before so add it to the list. 
-                        activeTiles.Add(walkableTile);
-                    }
-                }
+                return true;
             }
 
-            Console.WriteLine("No Path Found!");
-        }
+            visitedCells.Add(checkTile);
+            activeCells.Remove(checkTile);
 
-        private static List<Tile> GetWalkableTiles(List<string> map, Tile currentTile, Tile targetTile)
-        {
-            var possibleTiles = new List<Tile>()
+            var walkableTiles = GetWalkableTiles(worldGrid, checkTile, finish);
+
+            foreach (var walkableTile in walkableTiles)
             {
-                new Tile { X = currentTile.X, Y = currentTile.Y - 1, Parent = currentTile, Cost = currentTile.Cost + 1 },
-                new Tile { X = currentTile.X, Y = currentTile.Y + 1, Parent = currentTile, Cost = currentTile.Cost + 1},
-                new Tile { X = currentTile.X - 1, Y = currentTile.Y, Parent = currentTile, Cost = currentTile.Cost + 1 },
-                new Tile { X = currentTile.X + 1, Y = currentTile.Y, Parent = currentTile, Cost = currentTile.Cost + 1 },
-            };
+                //We have already visited this tile so we don't need to do so again!
+                if (visitedCells.Any(x => x.X == walkableTile.X && x.Y == walkableTile.Y))
+                    continue;
 
-            possibleTiles.ForEach(tile => tile.SetDistance(targetTile.X, targetTile.Y));
-
-            var maxX = map.First().Length - 1;
-            var maxY = map.Count - 1;
-
-            return possibleTiles
-                    .Where(tile => tile.X >= 0 && tile.X <= maxX)
-                    .Where(tile => tile.Y >= 0 && tile.Y <= maxY)
-                    .Where(tile => map[tile.Y][tile.X] == ' ' || map[tile.Y][tile.X] == 'B')
-                    .ToList();
+                //It's already in the active list, but that's OK, maybe this new tile has a better value (e.g. We might zigzag earlier but this is now straighter). 
+                if (activeCells.Any(x => x.X == walkableTile.X && x.Y == walkableTile.Y))
+                {
+                    var existingTile = activeCells.First(x => x.X == walkableTile.X && x.Y == walkableTile.Y);
+                    if (existingTile.CostDistance > checkTile.CostDistance)
+                    {
+                        activeCells.Remove(existingTile);
+                        activeCells.Add(walkableTile);
+                    }
+                }
+                else
+                {
+                    //We've never seen this tile before so add it to the list. 
+                    activeCells.Add(walkableTile);
+                }
+            }
         }
-    }
 
-    class Tile
-    {
-        public int X { get; set; }
-        public int Y { get; set; }
-        public int Cost { get; set; }
-        public int Distance { get; set; }
-        public int CostDistance => Cost + Distance;
-        public Tile Parent { get; set; }
 
-        //The distance is essentially the estimated distance, ignoring walls to our target. 
-        //So how many tiles left and right, up and down, ignoring walls, to get there. 
-        public void SetDistance(int targetX, int targetY)
-        {
-            this.Distance = Math.Abs(targetX - X) + Math.Abs(targetY - Y);
-        }
-    }
-
-    public static bool IsPathValid(IEnumerable<Cell> cells, WorldGrid worldGrid)
-    {
         return false;
+        Console.WriteLine("No Path Found!");
+    }
 
+    private static List<Cell> GetWalkableTiles(WorldGrid worldGrid, Cell currentTile, Cell targetTile)
+    {
+        var possibleCells = new List<Cell>();
+
+        possibleCells.Add(worldGrid.GetCell(new Vector2Int(currentTile.X, currentTile.Y - 1)));
+        possibleCells.Add(worldGrid.GetCell(new Vector2Int(currentTile.X, currentTile.Y + 1)));
+        possibleCells.Add(worldGrid.GetCell(new Vector2Int(currentTile.X - 1, currentTile.Y)));
+        possibleCells.Add(worldGrid.GetCell(new Vector2Int(currentTile.X + 1, currentTile.Y)));
+        
+        foreach (var cell in possibleCells)
+        {
+            if (cell == null) continue;
+
+            cell.Parent = currentTile;
+            cell.Cost = currentTile.Cost + 1;
+            cell.SetDistance(targetTile.X, targetTile.Y);
+        }
+       
+
+        var maxX = worldGrid.GridSize.x;
+        var maxY = worldGrid.GridSize.y;
+
+        return possibleCells
+                .Where(cell => cell.X >= 0 && cell.X <= maxX)
+                .Where(cell => cell.Y >= 0 && cell.Y <= maxY)
+                .Where(cell => cell.CanBeUsedToPath)
+                .ToList();
     }
 }

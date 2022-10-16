@@ -25,7 +25,7 @@ namespace App.Game.WorldBuild
 
         public Vector2Int GridSize => gridSize;
 
-        public  HashSet<Cell> DestinationCells => destinationCells;
+        public HashSet<Cell> DestinationCells => destinationCells;
 
         enum TileType
         {
@@ -83,7 +83,7 @@ namespace App.Game.WorldBuild
                     cellSpriteRenderer.flipX = x == 0;
 
 
-                    var cell = new Cell(new Vector2Int(x, y), cellObj, cellType == TileType.Wasteland);
+                    var cell = new Cell(new Vector2Int(x, y), cellObj, cellType == TileType.Wasteland, cellType == TileType.Destination);
                     cells[x, y] = cell;
 
                     if (cellType == TileType.Destination)
@@ -151,35 +151,9 @@ namespace App.Game.WorldBuild
             return cells[deltaPos.x, deltaPos.y];
         }
 
-        public IEnumerable<Cell> GetNeightbors(Cell cell)
+        public Cell GetCell(Vector2Int pos)
         {
-            var outElements = new List<Cell>();
-
-            var leftCell = GetCellInPosition(cell.CellPos - Vector2Int.right);
-            var right = GetCellInPosition(cell.CellPos + Vector2Int.right);
-            var top = GetCellInPosition(cell.CellPos + Vector2Int.up);
-            var down = GetCellInPosition(cell.CellPos - Vector2Int.up);
-
-
-            if (leftCell != null)
-            {
-                outElements.Add(leftCell);
-            }
-            if (right != null)
-            {
-                outElements.Add(right);
-            }
-            if (top != null)
-            {
-                outElements.Add(top);
-            }
-            if (down != null)
-            {
-                outElements.Add(down);
-            }
-
-
-            return outElements;
-        }
+            return cells[pos.x, pos.y];
+        }        
     }
 }
