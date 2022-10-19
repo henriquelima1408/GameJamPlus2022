@@ -1,43 +1,55 @@
-﻿using System;
+﻿using App.Game.Services;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
+using UnityFx.Async;
 
 namespace App.System.Utils
 {
-    public class CoroutineHelper : MonoSingleton<CoroutineHelper>
+    public class CoroutineHelper : MonoBehaviour, IService
     {
-        Dictionary<string, IEnumerator> coroutineDict;
+        Dictionary<string, IEnumerator> coroutineDict = new Dictionary<string, IEnumerator>();
 
-        protected override void Dispose()
+        public bool IsInitialized => true;
+
+        public void Dispose()
         {
             coroutineDict = null;
         }
 
-        protected override void Init()
+        public void Init()
         {
-            coroutineDict = new Dictionary<string, IEnumerator>();
+
+            DontDestroyOnLoad(gameObject);
         }
 
-        public string AddCoroutine(IEnumerator enumerator)
+        public IAsyncOperation<string> AddCoroutine(IEnumerator enumerator)
         {
-            StringBuilder stringBuilder = new StringBuilder();
+            var stringBuilder = new StringBuilder();
             stringBuilder.Append(enumerator.GetHashCode());
             stringBuilder.Append(Guid.NewGuid().ToString());
 
-            string coroutineID = stringBuilder.ToString();
+            var coroutineID = stringBuilder.ToString();
 
-            coroutineDict.Add(coroutineID, enumerator);
+            var asyncCompletionSource = new AsyncCompletionSource<string>();
+            coroutineDict.Add(coroutineID, DoCoroutine(enumerator, coroutineID, asyncCompletionSource));
 
             StartCoroutine(enumerator);
 
-            return coroutineID;
+            return asyncCompletionSource;
         }
         public void RemoveCoroutine(string coroutineID)
         {
             StopCoroutine(coroutineDict[coroutineID]);
             coroutineDict.Remove(coroutineID);
+        }
+
+        IEnumerator DoCoroutine(IEnumerator coroutine, string coroutineID, IAsyncCompletionSource<string> onFinish)
+        {
+            yield return coroutine;
+            onFinish.SetResult(coroutineID);            
         }
     }
 }

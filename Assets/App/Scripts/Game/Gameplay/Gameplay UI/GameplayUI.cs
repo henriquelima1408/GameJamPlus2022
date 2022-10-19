@@ -1,4 +1,3 @@
-using App.System.Sound;
 using App.System.Utils;
 using System.Collections;
 using System.Collections.Generic;
@@ -21,27 +20,27 @@ public class GameplayUI : MonoBehaviour
     [SerializeField] Button resumeLevelButton;
     [SerializeField] Button restartLevelButton;
     [SerializeField] Button quitButton;
-    
+
 
     int currentTurnCount = 1;
     LevelData levelData;
     GameplayManager gameplayManager;
-    SoundController soundController;
+    //SoundController soundController;
 
     public void Init(GameplayManager gameplayManager, LevelData levelData)
     {
         this.gameplayManager = gameplayManager;
-        soundController = SoundController.Instance;
+        //soundController = SoundController.Instance;
         this.levelData = levelData;
         turnCountText.text = $"{currentTurnCount} / {levelData.MaxTurnCount}";
         DoTurnButton.onClick.AddListener(() => gameplayManager.DoTurn());
         pauseButton.onClick.AddListener(() => pauseButtonHolder.SetActive(true));
 
-        bgmSlider.value = soundController.BgmVolume;
-        sfxSlider.value = soundController.Sfxvolume;
+        //bgmSlider.value = soundController.BgmVolume;
+        //sfxSlider.value = soundController.Sfxvolume;
 
-        bgmSlider.onValueChanged.AddListener((volume) => soundController.UpdateBGM(volume));
-        sfxSlider.onValueChanged.AddListener((volume) => soundController.UpdateSFX(volume));
+        //bgmSlider.onValueChanged.AddListener((volume) => soundController.UpdateBGM(volume));
+        //sfxSlider.onValueChanged.AddListener((volume) => soundController.UpdateSFX(volume));
 
         resumeLevelButton.onClick.AddListener(() => pauseButtonHolder.SetActive(false));
         restartLevelButton.onClick.AddListener(() => gameplayManager.ResetLevel());
@@ -50,7 +49,7 @@ public class GameplayUI : MonoBehaviour
 
         for (int i = 0; i < levelData.BuildDataInfo.Length; i++)
         {
-            var b = Instantiate<BuildButton>(buildButtonPrefab, buildButtonContentTransform);            
+            var b = Instantiate<BuildButton>(buildButtonPrefab, buildButtonContentTransform);
             b.Init(i, levelData.BuildDataInfo[i].BuildData.BuildSprite, (index) =>
             {
                 if (gameplayManager.IsPossibleToSelectBuild(levelData.BuildDataInfo[index].BuildData.Id))

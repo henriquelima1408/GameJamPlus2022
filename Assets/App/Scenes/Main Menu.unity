@@ -2082,6 +2082,7 @@ MonoBehaviour:
   sfxSlider: {fileID: 2008797711}
   settingsCloseButton: {fileID: 1977047644}
   credtisCloseButton: {fileID: 2020306728}
+  menuSound: {fileID: 8300000, guid: 2d829272732a7404493084cf211f3e60, type: 3}
 --- !u!1 &1864545194
 GameObject:
   m_ObjectHideFlags: 0
@@ -3055,63 +3056,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2113615082}
   m_CullTransparentMesh: 1
---- !u!1001 &929085668822162841
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 5339017075687806420, guid: 5429433c4458fd34aa18e5e422b1b38c, type: 3}
-      propertyPath: m_RootOrder
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 5339017075687806420, guid: 5429433c4458fd34aa18e5e422b1b38c, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 442.2
-      objectReference: {fileID: 0}
-    - target: {fileID: 5339017075687806420, guid: 5429433c4458fd34aa18e5e422b1b38c, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 219.8
-      objectReference: {fileID: 0}
-    - target: {fileID: 5339017075687806420, guid: 5429433c4458fd34aa18e5e422b1b38c, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5339017075687806420, guid: 5429433c4458fd34aa18e5e422b1b38c, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5339017075687806420, guid: 5429433c4458fd34aa18e5e422b1b38c, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5339017075687806420, guid: 5429433c4458fd34aa18e5e422b1b38c, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5339017075687806420, guid: 5429433c4458fd34aa18e5e422b1b38c, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5339017075687806420, guid: 5429433c4458fd34aa18e5e422b1b38c, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5339017075687806420, guid: 5429433c4458fd34aa18e5e422b1b38c, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5339017075687806420, guid: 5429433c4458fd34aa18e5e422b1b38c, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7565352249280981324, guid: 5429433c4458fd34aa18e5e422b1b38c, type: 3}
-      propertyPath: m_Name
-      value: SoundController
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 5429433c4458fd34aa18e5e422b1b38c, type: 3}
 --- !u!1001 &2101791143303481887
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3121,7 +3065,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2101791143345003842, guid: 07a08588186d9094ab8d12b9be10e841, type: 3}
       propertyPath: m_RootOrder
-      value: 4
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 2101791143345003842, guid: 07a08588186d9094ab8d12b9be10e841, type: 3}
       propertyPath: m_LocalPosition.x
@@ -3169,3 +3113,60 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 07a08588186d9094ab8d12b9be10e841, type: 3}
+--- !u!1001 &7326425369488563969
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 7326425367897360901, guid: e0cdfd072e09e8444a75d2d00fc6920c, type: 3}
+      propertyPath: m_Name
+      value: Services
+      objectReference: {fileID: 0}
+    - target: {fileID: 7326425367897360903, guid: e0cdfd072e09e8444a75d2d00fc6920c, type: 3}
+      propertyPath: m_RootOrder
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 7326425367897360903, guid: e0cdfd072e09e8444a75d2d00fc6920c, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 483.1814
+      objectReference: {fileID: 0}
+    - target: {fileID: 7326425367897360903, guid: e0cdfd072e09e8444a75d2d00fc6920c, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 153.61742
+      objectReference: {fileID: 0}
+    - target: {fileID: 7326425367897360903, guid: e0cdfd072e09e8444a75d2d00fc6920c, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -17.104519
+      objectReference: {fileID: 0}
+    - target: {fileID: 7326425367897360903, guid: e0cdfd072e09e8444a75d2d00fc6920c, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7326425367897360903, guid: e0cdfd072e09e8444a75d2d00fc6920c, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7326425367897360903, guid: e0cdfd072e09e8444a75d2d00fc6920c, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7326425367897360903, guid: e0cdfd072e09e8444a75d2d00fc6920c, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7326425367897360903, guid: e0cdfd072e09e8444a75d2d00fc6920c, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7326425367897360903, guid: e0cdfd072e09e8444a75d2d00fc6920c, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7326425367897360903, guid: e0cdfd072e09e8444a75d2d00fc6920c, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: e0cdfd072e09e8444a75d2d00fc6920c, type: 3}

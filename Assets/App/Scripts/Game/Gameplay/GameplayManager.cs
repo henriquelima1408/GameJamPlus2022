@@ -6,7 +6,6 @@ using App.Game.Gameplay;
 using System;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
-using App.System.Sound;
 
 public class GameplayManager : MonoSingleton<GameplayManager>
 {
@@ -54,14 +53,14 @@ public class GameplayManager : MonoSingleton<GameplayManager>
     void Awake()
     {
         Instance = this;
-        SoundController.Instance.SetMusic(1);
+        //SoundController.Instance.SetMusic(1);
     }
 
     protected override void Dispose()
     {        
         turnController.Dispose();
 
-        SoundController.Instance.SetMusic(0);
+       // SoundController.Instance.SetMusic(0);
         if (resetLevel)
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
