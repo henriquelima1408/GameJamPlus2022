@@ -1,4 +1,5 @@
 ﻿using App.Game.Services;
+using App.Game.Services.CoroutineServiceMock;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using UnityFx.Async;
 
 namespace App.System.Utils
 {
-    public class CoroutineHelper : MonoBehaviour, IService
+    public class CoroutineService : MonoBehaviour, ICoroutineService
     {
         Dictionary<string, IEnumerator> coroutineDict = new Dictionary<string, IEnumerator>();
 

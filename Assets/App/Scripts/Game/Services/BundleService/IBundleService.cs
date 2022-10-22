@@ -6,8 +6,7 @@ using System.Threading.Tasks;
 
 namespace App.Game.Services
 {
-    public interface IService : IDisposable
+    public interface IBundleService : IService
     {
-        bool IsInitialized { get; }        
     }
 }

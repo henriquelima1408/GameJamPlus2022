@@ -1,39 +1,17 @@
-﻿using System;
-using App.System.Utils;
+﻿using App.System.Utils;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityFx.Async;
 using UnityFx.Async.Promises;
+using App.Game.Services.SoudServiceMock;
+using System;
+using App.Game.Services.CoroutineServiceMock;
 
 namespace App.Game.Services
 {
-    public class SoundService : IService
+    public class SoundService : ISoundService
     {
-        public struct SoundDetails
-        {
-            readonly bool isLoop;
-            readonly bool transition;
-            readonly float fadeOutTime;
-            readonly float fadeInTime;
-
-            public SoundDetails(bool isLoop, bool transition, float fadeOutTime, float fadeInTime)
-            {
-                this.isLoop = isLoop;
-                this.transition = transition;
-                this.fadeOutTime = fadeOutTime;
-                this.fadeInTime = fadeInTime;
-            }
-
-            public bool transitionEnabled => transition;
-
-            public float FadeOutTime => fadeOutTime;
-
-            public float FadeInTime => fadeInTime;
-
-            public bool IsLoop => isLoop;
-        }
-
         float bgmVolume = 1;
         float sfxvolume = 1;
 
@@ -47,16 +25,46 @@ namespace App.Game.Services
 
         readonly Queue<AudioSource> bgmSourcePool;
         readonly Queue<AudioSource> sfxSourcePool;
+        readonly HashSet<AudioSource> currentlyPlayingAudioSources;
 
         AudioSource currentBGMSource;
-        //Dependencies
-        CoroutineHelper coroutineHelper;
 
-        public SoundService(IAsyncOperation<CoroutineHelper> asyncCoroutineHelper)
+        //Dependencies
+        ICoroutineService coroutineService;
+
+        public SoundService(IAsyncOperation<ICoroutineService> asyncCoroutineHelper)
         {
             bgmSourcePool = new Queue<AudioSource>(bgmPoolCount);
             sfxSourcePool = new Queue<AudioSource>(sfxPoolCount);
-            asyncCoroutineHelper.Then<CoroutineHelper>((c) => { this.coroutineHelper = c; });
+            currentlyPlayingAudioSources = new HashSet<AudioSource>();
+            asyncCoroutineHelper.Then<ICoroutineService>((c) => { this.coroutineService = c; });
+
+            var root = new GameObject("SoundRoot").transform;
+            var bgmRoot = new GameObject("BGMRoot").transform;
+            var sfxRoot = new GameObject("SFXRoot").transform;
+
+            bgmRoot.parent = root;
+            sfxRoot.parent = root;
+
+            for (int i = 0; i < bgmPoolCount; i++)
+            {
+                var g = new GameObject($"_BGMSource_{i}");
+                var audioSource = g.AddComponent<AudioSource>();
+                g.transform.parent = bgmRoot.transform;
+
+                bgmSourcePool.Enqueue(audioSource);
+            }
+
+            for (int i = 0; i < sfxPoolCount; i++)
+            {
+                var g = new GameObject($"_SFXSource_{i}");
+                var audioSource = g.AddComponent<AudioSource>();
+                g.transform.parent = sfxRoot;
+
+                sfxSourcePool.Enqueue(audioSource);
+            }
+
+            MonoBehaviour.DontDestroyOnLoad(root.gameObject);
         }
 
         void ResetAudioSource(AudioSource audioSource)
@@ -67,6 +75,7 @@ namespace App.Game.Services
                 return;
             }
 
+            currentlyPlayingAudioSources.Remove(audioSource);
             audioSource.Stop();
             audioSource.clip = null;
         }
@@ -75,10 +84,13 @@ namespace App.Game.Services
         {
             if (soundDetails.transitionEnabled)
             {
-
+                throw new NotImplementedException();
             }
             else
             {
+                if (currentBGMSource != null)
+                    ResetAudioSource(currentBGMSource);
+
                 currentBGMSource = bgmSourcePool.Dequeue();
                 PlaySound(currentBGMSource, audioClip, soundDetails).
                     Then((audioSource) =>
@@ -113,15 +125,46 @@ namespace App.Game.Services
             });
         }
 
+        public void PauseAllSFX(bool state)
+        {
+
+            foreach (var audioSource in currentlyPlayingAudioSources)
+            {
+                if (audioSource != currentBGMSource)
+                {
+                    if (state)
+                    {
+                        audioSource.Pause();
+
+                    }
+                    else
+                    {
+                        audioSource.UnPause();
+                    }
+                }
+            }
+
+        }
+
+        public void StopAllSFX()
+        {
+            foreach (var audioSource in currentlyPlayingAudioSources)
+            {
+                if (audioSource != currentBGMSource) audioSource?.Pause();
+            }
+        }
+
         IAsyncOperation<AudioSource> PlaySound(AudioSource audioSource, AudioClip audioClip, SoundDetails transitionDetails)
         {
+            currentlyPlayingAudioSources.Add(audioSource);
+
             audioSource.clip = audioClip;
             audioSource.Play();
 
             var asyncCompletionSource = new AsyncCompletionSource<AudioSource>();
 
-            coroutineHelper.AddCoroutine(WaitAudioSourceFinishPlay(asyncCompletionSource, audioSource)).
-                Then((coroutineID) => coroutineHelper.RemoveCoroutine(coroutineID));
+            coroutineService.AddCoroutine(WaitAudioSourceFinishPlay(asyncCompletionSource, audioSource)).
+                Then((coroutineID) => coroutineService.RemoveCoroutine(coroutineID));
 
             return asyncCompletionSource;
         }
@@ -141,7 +184,6 @@ namespace App.Game.Services
                 previousSampleRate = currentsampleRate;
                 currentsampleRate = audioSource.timeSamples * sampleRate;
 
-                Debug.Log(currentsampleRate);
                 yield return null;
             }
 
@@ -151,38 +193,6 @@ namespace App.Game.Services
         public void Dispose()
         {
 
-        }
-
-        public void Init()
-        {
-
-
-            var root = new GameObject("SoundRoot").transform;
-            var bgmRoot = new GameObject("BGMRoot").transform;
-            var sfxRoot = new GameObject("SFXRoot").transform;
-
-            bgmRoot.parent = root;
-            sfxRoot.parent = root;
-
-            for (int i = 0; i < bgmPoolCount; i++)
-            {
-                var g = new GameObject($"_BGMSource_{i}");
-                var audioSource = g.AddComponent<AudioSource>();
-                g.transform.parent = bgmRoot.transform;
-
-                bgmSourcePool.Enqueue(audioSource);
-            }
-
-            for (int i = 0; i < sfxPoolCount; i++)
-            {
-                var g = new GameObject($"_SFXSource_{i}");
-                var audioSource = g.AddComponent<AudioSource>();
-                g.transform.parent = sfxRoot;
-
-                sfxSourcePool.Enqueue(audioSource);
-            }
-
-            MonoBehaviour.DontDestroyOnLoad(root.gameObject);
         }
     }
 }

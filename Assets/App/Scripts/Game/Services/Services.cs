@@ -1,4 +1,7 @@
-﻿using App.System.Utils;
+﻿using App.Game.Services.CoroutineServiceMock;
+using App.Game.Services.LevelServiceMock;
+using App.Game.Services.SoudServiceMock;
+using App.System.Utils;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -25,8 +28,14 @@ namespace App.Game.Services
             }
 
             Init();
+            StartServices();
         }
 
+        void Init()
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
         public bool IsInitialized
         {
             get
@@ -48,21 +57,14 @@ namespace App.Game.Services
 
         }
 
-        public void Init()
+        public void StartServices()
         {
-            instance = this;
-            DontDestroyOnLoad(gameObject);
-
-            var coroutineHelper = new GameObject("CoroutineHelper").AddComponent<CoroutineHelper>();
+            var coroutineHelper = new GameObject("CoroutineHelper").AddComponent<CoroutineService>();
             coroutineHelper.transform.parent = transform;
-            services.Add(typeof(CoroutineHelper), coroutineHelper);
+            services.Add(typeof(ICoroutineService), coroutineHelper);
 
-            services.Add(typeof(SoundService), new SoundService(GetService<CoroutineHelper>()));
-
-            foreach (var service in services.Values)
-            {
-                service.Init();
-            }
+            services.Add(typeof(ISoundService), new SoundService(GetService<ICoroutineService>()));
+            services.Add(typeof(ILevelSelectorService), new LevelSelectorService(null));
         }
 
         public IAsyncOperation<T> GetService<T>()
@@ -83,7 +85,7 @@ namespace App.Game.Services
             }
             else
             {
-                var coroutineHelper = GetService<CoroutineHelper>().Result as CoroutineHelper;
+                var coroutineHelper = GetService<CoroutineService>().Result as CoroutineService;
 
                 coroutineHelper.AddCoroutine(ServiceRequest(serviceRequest, services[typeof(T)])).
                     Then((coroutineID) => coroutineHelper.RemoveCoroutine(coroutineID));
