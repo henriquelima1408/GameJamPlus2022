@@ -1,0 +1,10 @@
+{"BundleMetadatas":[
+						{
+						"BundleName":""
+						,"Dependecies":null,
+						"Assets":null,
+						"Version":0.0,
+						"Size":0.0,
+						"IsRemote":false}
+						]
+}

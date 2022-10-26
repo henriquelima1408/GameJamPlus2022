@@ -65,6 +65,7 @@ namespace App.Game.Services
 
             services.Add(typeof(ISoundService), new SoundService(GetService<ICoroutineService>()));
             services.Add(typeof(ILevelSelectorService), new LevelSelectorService(null));
+            services.Add(typeof(IBundleService), new BundleService());
         }
 
         public IAsyncOperation<T> GetService<T>()
