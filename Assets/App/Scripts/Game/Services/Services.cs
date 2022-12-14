@@ -63,9 +63,10 @@ namespace App.Game.Services
             coroutineHelper.transform.parent = transform;
             services.Add(typeof(ICoroutineService), coroutineHelper);
 
-            services.Add(typeof(ISoundService), new SoundService(GetService<ICoroutineService>()));
-            services.Add(typeof(ILevelSelectorService), new LevelSelectorService(null));
             services.Add(typeof(IBundleService), new BundleService());
+            services.Add(typeof(ISoundService), new SoundService(GetService<ICoroutineService>()));            
+
+            services.Add(typeof(ILevelSelectorService), new LevelSelectorService(GetService<IBundleService>()));
         }
 
         public IAsyncOperation<T> GetService<T>()

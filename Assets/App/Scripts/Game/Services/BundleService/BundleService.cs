@@ -22,6 +22,7 @@ namespace App.Game.Services
 
         public BundleService()
         {
+
             bundleManifestPath = Path.Combine(Application.streamingAssetsPath, fileFolderName, $"{fileName}");
 
             Debug.Assert(File.Exists(bundleManifestPath), $"Bundle manifest doesnt exist in path: {bundleManifestPath}");
@@ -42,17 +43,27 @@ namespace App.Game.Services
         public IAsyncOperation<T> LoadAsset<T>(string bundleName, string assetName) where T : UnityEngine.Object
         {
             var resultOperation = new AsyncCompletionSource<T>();
-            LoadBundle(bundleName, new AsyncCompletionSource()).
+            LoadBundle(bundleName).
                 Then(() =>
                 {
-                    var asset = bundles[bundleName].AssetBundle.LoadAsset<T>(assetName);
+                    T asset = null;
+
+                    if (CompilationUtils.IsEditor)
+                    {
+                        asset = System.Bundles.Editor.BundleAssetProvider.GetAsset<T>(bundleName, assetName);
+                    }
+                    else
+                    {
+                        asset = bundles[bundleName].AssetBundle.LoadAsset<T>(assetName);
+                    }
+
                     resultOperation?.SetResult(asset);
                 });
 
             return resultOperation;
         }
 
-        public IAsyncOperation LoadBundle(string bundleName, IAsyncCompletionSource completionSource)
+        public IAsyncOperation LoadBundle(string bundleName)
         {
             var operation = new AsyncCompletionSource();
             var bundle = bundles[bundleName];
@@ -63,7 +74,7 @@ namespace App.Game.Services
                 bundle.LoadBundle();
             }
 
-            completionSource?.SetCompleted();
+            operation?.SetCompleted();
             return operation;
         }
 
@@ -72,6 +83,10 @@ namespace App.Game.Services
             return bundles[bundleName].IsReady;
         }
 
+        public string[] GetAssetNames(string bundleName)
+        {
+            return bundles[bundleName].GetAssetNames();
+        }
 
         public void Dispose()
         {
@@ -83,6 +98,7 @@ namespace App.Game.Services
             bundles = null;
             bundleManifest = null;
         }
+
 
         [Serializable]
         class BundleData
@@ -96,8 +112,8 @@ namespace App.Game.Services
 
             public string BundleName { get => bundleName; }
             public bool IsRemote { get => isRemote; }
-            public bool IsLoaded { get => assetBundle != null; }
-            public bool IsReady { get => !IsRemote; }
+            public bool IsLoaded { get => CompilationUtils.IsEditor || assetBundle != null; }
+            public bool IsReady { get => CompilationUtils.IsEditor || !IsRemote; }
             public AssetBundle AssetBundle { get => assetBundle; }
 
             public BundleData(BundleMetadata bundleMetadata)
@@ -121,85 +137,14 @@ namespace App.Game.Services
 
             public string[] GetDependencies()
             {
-
                 return bundleMetadata.Dependecies;
+            }
+
+            public string[] GetAssetNames()
+            {
+                return bundleMetadata.Assets;
             }
         }
 
     }
-
-    [Serializable]
-    class BundleManifest
-    {
-        BundleMetadata[] bundleMetadatas;
-
-        public BundleManifest(BundleMetadata[] bundleMetadatas)
-        {
-            this.bundleMetadatas = bundleMetadatas;
-        }
-
-        public BundleMetadata[] BundleMetadatas { get => bundleMetadatas; }
-    }
-
-    [Serializable]
-    public class BundleMetadata
-    {
-        readonly string bundleName;
-        readonly string[] dependecies;
-        readonly string[] assets;
-        readonly double version;
-        readonly double size;
-        readonly bool isRemote;
-
-        public BundleMetadata(string bundleName, string[] dependecies, string[] assets, double version, double size, bool isRemote)
-        {
-            this.bundleName = bundleName;
-            this.dependecies = dependecies;
-            this.assets = assets;
-            this.version = version;
-            this.size = size;
-            this.isRemote = isRemote;
-        }
-
-        public string BundleName => bundleName;
-
-        public string[] Dependecies => dependecies;
-
-        public string[] Assets => assets;
-
-        public double Version => version;
-
-        public double Size => size;
-
-        public bool IsRemote => isRemote;
-    }
-
-
-    //public static class A
-    //{
-
-
-    //    [UnityEditor.MenuItem("Jobs/Test path")]
-    //    public static void T()
-    //    {
-    //        string fileName = "BundleManifest.txt";
-    //        var bundleManifestPath = Path.Combine(Application.streamingAssetsPath, "BundleManifest", $"{fileName}");
-
-
-    //        using (StreamWriter streamReader = new StreamWriter(bundleManifestPath))
-    //        {
-    //            streamReader.Write("xablauuu");
-    //        }
-
-    //        //if (!File.Exists(bundleManifestPath))
-    //        //{
-
-    //        //    File.Create(bundleManifestPath);
-
-    //        //}
-
-    //    }
-
-
-    //}
 }

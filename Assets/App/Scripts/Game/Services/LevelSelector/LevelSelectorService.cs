@@ -2,22 +2,42 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityFx.Async;
+using UnityFx.Async.Promises;
 
 namespace App.Game.Services
 {
     public class LevelSelectorService : ILevelSelectorService
     {
-        LevelData[] levelDatas;
-        int currentLevelDataIndex;
-
-        public bool IsInitialized => true;
+        public bool IsInitialized => isInitialized;
         public LevelData SelectedLevelData => levelDatas[currentLevelDataIndex];
         public IReadOnlyCollection<LevelData> LevelDatas => levelDatas;
 
-        public LevelSelectorService(LevelData[] levelDatas)
+        LevelData[] levelDatas;
+        int currentLevelDataIndex;
+        IBundleService bundleService;
+        const string levelsBundleName = "level-data";
+        bool isInitialized;
+
+        public LevelSelectorService(IAsyncOperation<IBundleService> bundleServicePromisse)
         {
-            Debug.Assert(levelDatas != null && levelDatas.Length > 0, "LevelDatas is invalid");
-            this.levelDatas = levelDatas;
+            bundleServicePromisse.Then((b) =>
+            {
+                bundleService = b;
+                var levelNames = bundleService.GetAssetNames(levelsBundleName);
+
+                levelDatas = new LevelData[levelNames.Length];
+
+                for (int i = 0; i < levelDatas.Length; i++)
+                {
+                    bundleService.LoadAsset<LevelData>(levelsBundleName, levelNames[i]).Then((levelData) =>
+                    {
+                        levelDatas[i] = levelData;
+                    });
+                }
+
+                isInitialized = true;
+            });
         }
 
         public void Dispose()
