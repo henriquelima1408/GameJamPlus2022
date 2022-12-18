@@ -42,15 +42,29 @@ namespace App.Game.Gameplay
         public void SelectCell(Vector2 pos, BuildData buildData)
         {
             Cell newCell = worldGrid.GetCellInPosition(pos);
-            
+
             if (newCell != null)
             {
                 var previousCell = currentSelectedCell;
-                DeselectCell(previousCell);                
+                DeselectCell(previousCell);
 
-                if (IsPossibleToSelect(newCell))
+                var selectedCells = GetHoverCells(newCell, buildData);
+                var isPossibleToBuild = selectedCells.Count != 0;
+
+                foreach (var cell in selectedCells)
                 {
-                    hoverCells = GetHoverCells(newCell, buildData);
+                    if (!IsPossibleToSelect(cell))
+                    {
+                        isPossibleToBuild = false;
+                        break;
+                    }
+                }
+
+                Debug.Log($"Cell {newCell.CellPos} isPossibleToBuild {isPossibleToBuild}");
+
+                if (isPossibleToBuild)
+                {
+                    hoverCells = selectedCells;
 
                     currentSelectedCell?.Deselect();
                     currentSelectedCell = newCell;
@@ -79,10 +93,12 @@ namespace App.Game.Gameplay
         HashSet<Cell> GetHoverCells(Cell cell, BuildData buildData)
         {
             HashSet<Cell> outCells = new HashSet<Cell>();
+            outCells.Add(cell);
+            var directionsLenght = 1;
             for (int i = 1; i <= buildData.AreaRadius; i++)
             {
-
-                var directions = BuildPattern.GetBuildPattern(buildData.BuildPattern);
+                Vector2Int[] directions = (Vector2Int[])BuildPattern.GetBuildPattern(buildData.BuildPattern);
+                directionsLenght += directions.Length;
                 var pos = cell.CellPos;
 
                 foreach (var dir in directions)
@@ -91,6 +107,10 @@ namespace App.Game.Gameplay
                     if (hoverCell != null && hoverCell.IsEditable && hoverCell.Build == null) outCells.Add(hoverCell);
                 }
             }
+
+            if (outCells.Count * buildData.AreaRadius != directionsLenght)
+                outCells.Clear();
+
             return outCells;
 
         }
