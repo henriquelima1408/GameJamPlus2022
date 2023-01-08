@@ -1,11 +1,11 @@
 ﻿using System.Collections;
-using UnityFx.Async;
+using static App.System.Utils.CoroutineService;
 
-namespace App.Game.Services.CoroutineServiceMock
+namespace App.Game.Services
 {
     public interface ICoroutineService : IService
     {
-        IAsyncOperation<string> AddCoroutine(IEnumerator enumerator);
+        CoroutineInfo AddCoroutine(IEnumerator enumerator);
         void RemoveCoroutine(string coroutineID);
     }
 }

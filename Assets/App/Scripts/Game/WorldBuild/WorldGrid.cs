@@ -119,7 +119,7 @@ namespace App.Game.WorldBuild
 
                         if (cellType == TileType.Enemy)
                         {
-                            turnController.AddAI(new AICharacter(turnController, this, cell, asset));
+                            //turnController.AddAI(new AICharacter(turnController, this, cell, asset));
                         }
 
 

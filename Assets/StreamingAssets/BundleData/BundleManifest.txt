@@ -1,10 +1,1 @@
-{"BundleMetadatas":[
-						{
-						"BundleName":""
-						,"Dependecies":null,
-						"Assets":null,
-						"Version":0.0,
-						"Size":0.0,
-						"IsRemote":false}
-						]
-}
+{"BundleMetadatas":[{"BundleName":"level-data","Dependecies":[],"Assets":["Level 1","Level 2","Level 3","Level 4","Level 5","Level 6","Level 7","Level 8","Level 9"],"Version":1.0,"Size":0.18780000000000002,"IsRemote":false},{"BundleName":"screens","Dependecies":[],"Assets":["TitleScreen"],"Version":1.0,"Size":0.11838,"IsRemote":false},{"BundleName":"scriptable-objects","Dependecies":[],"Assets":["Context Filters"],"Version":1.0,"Size":0.00185,"IsRemote":false}]}

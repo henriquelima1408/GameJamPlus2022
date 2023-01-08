@@ -1,9 +1,8 @@
-﻿using App.Game.Services.LevelServiceMock;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using UnityEngine;
 using UnityFx.Async;
 using UnityFx.Async.Promises;
+using System.Collections.Generic;
 
 namespace App.Game.Services
 {
@@ -33,11 +32,11 @@ namespace App.Game.Services
                     bundleService.LoadAsset<LevelData>(levelsBundleName, levelNames[i]).Then((levelData) =>
                     {
                         levelDatas[i] = levelData;
-                    });
+                    }).Catch((e) => Debug.LogException(e));
                 }
 
                 isInitialized = true;
-            });
+            }).Catch((e) => Debug.LogException(e));
         }
 
         public void Dispose()

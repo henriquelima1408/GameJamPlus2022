@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace App.Game.Services.SoudServiceMock
+namespace App.Game.Services
 {
     public interface ISoundService : IService
     {
@@ -12,7 +12,7 @@ namespace App.Game.Services.SoudServiceMock
         void StopAllSFX();
     }
 }
-namespace App.Game.Services.SoudServiceMock
+namespace App.Game.Services
 {
 
     public struct SoundDetails

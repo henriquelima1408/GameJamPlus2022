@@ -64,7 +64,7 @@ namespace App.Game.WorldBuild
 
             string guid = Guid.NewGuid().ToString();
             build = new DynamicBuild(guid, this, buildData, buildGameObject, cellsInArea);
-            build.OnBuild += onBuild;
+            //build.OnBuild += onBuild;
             isEditable = false;
             canBeUsedToPath = true;
             isInPreviewState = true;
@@ -80,7 +80,7 @@ namespace App.Game.WorldBuild
             Debug.Log($"build {guid} finish");
 
             buildGameObject.SetActive(true);
-            build.OnBuild?.Invoke(build);
+            //build.OnBuild?.Invoke(build);
         }
 
         public void Select(bool isHover)

@@ -1,5 +1,4 @@
 using App.Game.Services;
-using App.Game.Services.SoudServiceMock;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -63,9 +62,7 @@ public class MainMenu : MonoBehaviour
         credtisCloseButton.onClick.AddListener(() => credtisPopupHolder.SetActive(false));
 
 
-        Services.Instance.GetService<ISoundService>().Then((soundService) => soundService.PlayBGM(menuSound, new SoundDetails(true, false, 0, 0)));
-
-
+        Services.Instance.GetService<ISoundService>().Then((soundService) => soundService.PlayBGM(menuSound, new SoundDetails(true, false, 0, 0))).Catch((e) => Debug.LogException(e));
     }
 
     private void Update()

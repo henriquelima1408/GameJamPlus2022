@@ -1,0 +1,45 @@
+ManifestFileVersion: 0
+CRC: 2181544287
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: c5d7c3ff45d100c4d469d8a38f0652c1
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: b6f4e69f6ac2ecf3a7b3f1ab4975fe4c
+HashAppended: 0
+ClassTypes:
+- Class: 1
+  Script: {instanceID: 0}
+- Class: 4
+  Script: {instanceID: 0}
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 48
+  Script: {instanceID: 0}
+- Class: 114
+  Script: {fileID: 11500000, guid: 628062079f1575f44b988d3785f8206d, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 986415d125ebe154f9b9d1cc84a9ee62, type: 3}
+- Class: 115
+  Script: {instanceID: 0}
+- Class: 212
+  Script: {instanceID: 0}
+- Class: 213
+  Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers:
+- AssemblyName: Assembly-CSharp
+  ClassName: BuildDataInfo
+Assets:
+- Assets/App/ScriptableObject/LevelData/Level 6/Level 6.asset
+- Assets/App/ScriptableObject/LevelData/Level 2/Level 2.asset
+- Assets/App/ScriptableObject/LevelData/Level 4/Level 4.asset
+- Assets/App/ScriptableObject/LevelData/Level 9/Level 9.asset
+- Assets/App/ScriptableObject/LevelData/Level 7/Level 7.asset
+- Assets/App/ScriptableObject/LevelData/Level 8/Level 8.asset
+- Assets/App/ScriptableObject/LevelData/Level 1/Level 1.asset
+- Assets/App/ScriptableObject/LevelData/Level 3/Level 3.asset
+- Assets/App/ScriptableObject/LevelData/Level 5/Level 5.asset
+Dependencies: []

@@ -6,239 +6,240 @@ using App.Game.Gameplay;
 using System;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
+using App.Game.Services;
+using UnityFx.Async.Promises;
 
-public class GameplayManager : MonoSingleton<GameplayManager>
+public class GameplayManager /*: MonoSingleton<GameplayManager>*/
 {
-    [SerializeField]
-    GameplayDatasheet gameplayDatasheet;
+    //[SerializeField]
+    //GameplayDatasheet gameplayDatasheet;
 
-    [SerializeField]
-    GameplayUI gameplayUI;
+    //[SerializeField]
+    //GameplayUI gameplayUI;
 
-    [SerializeField]
-    PlayerCamera playerCameraPrefab;
+    //[SerializeField]
+    //PlayerCamera playerCameraPrefab;
 
-    WorldGrid grid;
-    PlayerCamera playerCamera;
-    CellSelector cellSelector;
-    TurnController turnController;
+    //WorldGrid grid;
+    //PlayerCamera playerCamera;
+    //CellSelector cellSelector;
+    //TurnController turnController;
 
-    BuildData currentSelectedBuildData;
+    //BuildData currentSelectedBuildData;
 
 
-    Dictionary<string, int> buildDataAllowedUse = new Dictionary<string, int>();
-    LevelData levelData;
+    //Dictionary<string, int> buildDataAllowedUse = new Dictionary<string, int>();
+    //LevelData levelData;
 
-    //TODO Remove it: Just for test
-    Action<KeyCode> OnInput;
-    const string levelSelectionSceneName = "LevelSelection";
+    ////TODO Remove it: Just for test
+    //Action<KeyCode> OnInput;
+    //const string levelSelectionSceneName = "LevelSelection";
 
-    bool resetLevel = false;
-    bool quit = false;
+    //bool resetLevel = false;
+    //bool quit = false;
 
-    public WorldGrid Grid
-    {
-        get => grid;
-    }
-    public PlayerCamera PlayerCamera
-    {
-        get => playerCamera;
-    }
-    public BuildData CurrentSelectedBuildData { get => currentSelectedBuildData; }
-    public void SetBuildData(BuildData buildData)
-    {
-        currentSelectedBuildData = buildData;
-    }
+    //public WorldGrid Grid
+    //{
+    //    get => grid;
+    //}
+    //public PlayerCamera PlayerCamera
+    //{
+    //    get => playerCamera;
+    //}
+    //public BuildData CurrentSelectedBuildData { get => currentSelectedBuildData; }
+    //public void SetBuildData(BuildData buildData)
+    //{
+    //    currentSelectedBuildData = buildData;
+    //}
 
-    void Awake()
-    {
-        Instance = this;
-        //SoundController.Instance.SetMusic(1);
-    }
+    //void Awake()
+    //{
+    //    Instance = this;
+    //    //SoundController.Instance.SetMusic(1);
+    //}
 
-    protected override void Dispose()
-    {        
-        turnController.Dispose();
+    //protected override void Dispose()
+    //{        
+    //    turnController.Dispose();
 
-       // SoundController.Instance.SetMusic(0);
-        if (resetLevel)
-        {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-        }
-        else
-        {
-            SceneManager.LoadScene(levelSelectionSceneName);
-        }
+    //   // SoundController.Instance.SetMusic(0);
+    //    if (resetLevel)
+    //    {
+    //        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    //    }
+    //    else
+    //    {
+    //        SceneManager.LoadScene(levelSelectionSceneName);
+    //    }
 
-    }
+    //}
 
-    bool IsBuildingSomething()
-    {
-        var builds = turnController.BuildUpdater.PlayerBuilds;
+    //bool IsBuildingSomething()
+    //{
+    //    var builds = turnController.BuildUpdater.PlayerBuilds;
 
-        bool isBuildingSomething = false;
-        foreach (var item in builds.Values)
-        {
-            if (item == null) continue;
+    //    bool isBuildingSomething = false;
+    //    foreach (var item in builds.Values)
+    //    {
+    //        if (item == null) continue;
 
-            var cellsInArea = item.CellsInArea;
+    //        var cellsInArea = item.CellsInArea;
 
-            foreach (var cell in cellsInArea)
-            {
-                if (cell.IsEditable)
-                {
-                    isBuildingSomething = true;
-                    break;
-                }
-            }
-        }
+    //        foreach (var cell in cellsInArea)
+    //        {
+    //            if (cell.IsEditable)
+    //            {
+    //                isBuildingSomething = true;
+    //                break;
+    //            }
+    //        }
+    //    }
 
-        return isBuildingSomething;
-    }
+    //    return isBuildingSomething;
+    //}
 
-    bool ThereIsSomethingToPut()
-    {
-        foreach (var item in buildDataAllowedUse.Values)
-        {
-            if (item > 0)
-            {
-                return true;
-            }
-        }
-        return false;
-    }
+    //bool ThereIsSomethingToPut()
+    //{
+    //    foreach (var item in buildDataAllowedUse.Values)
+    //    {
+    //        if (item > 0)
+    //        {
+    //            return true;
+    //        }
+    //    }
+    //    return false;
+    //}
 
-    public void DoTurn()
-    {
-        if (IsBuildingSomething())
-        {
-            turnController.DoTurn();
-        }
-    }
+    //void CheckLoose()
+    //{
 
-    void CheckLoose()
-    {
+    //    if (!IsBuildingSomething() && !ThereIsSomethingToPut()) Quit();
+    //}
+    //protected override void Init()
+    //{
+    //    levelData = LevelController.Instance.LevelData;
 
-        if (!IsBuildingSomething() && !ThereIsSomethingToPut()) Quit();
-    }
-    protected override void Init()
-    {
-        levelData = LevelController.Instance.LevelData;
+    //    GameObject gridRoot = new GameObject("GridRoot");
 
-        GameObject gridRoot = new GameObject("GridRoot");
+    //    gridRoot.transform.position = Vector2.zero;
+    //    gridRoot.transform.parent = transform;
 
-        gridRoot.transform.position = Vector2.zero;
-        gridRoot.transform.parent = transform;
 
-        turnController = new TurnController();
-        grid = new WorldGrid(turnController, gameplayDatasheet.TileMapDatas, gridRoot.transform, Vector2.left * 3);
-        turnController.Init(grid);
+    //    Services.Instance.GetService<CoroutineService>().Then((coroutineService) =>
+    //    {
+    //        turnController = new TurnController(coroutineService);
 
-        turnController.OnTurnFinished += CheckLoose;
-        turnController.OnVictory += Quit;
-        cellSelector = new CellSelector(grid);
+    //    });
+        
 
-        //TODO: Remove it. Its here just to test
-        cellSelector.OnSelectedCellChanged += (previous, current, hoverCells) =>
-        {
+    //    grid = new WorldGrid(turnController, gameplayDatasheet.TileMapDatas, gridRoot.transform, Vector2.left * 3);
+    //    turnController.Init(grid);
 
+    //    turnController.OnTurnFinished += CheckLoose;
+    //    turnController.OnVictory += Quit;
+    //    cellSelector = new CellSelector(grid);
+
+    //    //TODO: Remove it. Its here just to test
+    //    cellSelector.OnSelectedCellChanged += (previous, current, hoverCells) =>
+    //    {
 
 
 
-        };
 
-        //TODO: Remove it. Its here just to test
-        OnInput += (key) =>
-        {
-            if (key == KeyCode.Mouse0)
-            {
-                if (UIUtils.IsPointerOverUIElement())
-                {
-                    cellSelector.DeselectCell(cellSelector.CurrentSelectedCell);
-                    return;
-                }
+    //    };
 
-                if (cellSelector.CurrentSelectedCell != null)
-                {
-                    Cell cell = cellSelector.CurrentSelectedCell;
-                    if (cell.IsEditable && cell.Build == null)
-                    {
-                        BuildData buildData = currentSelectedBuildData;
-                        cell.CreateBuild(buildData, cellSelector.HoverCells, (entity) =>
-                        {
-                            var build = (IBuild)entity;
-                            turnController.AddBuild(build);
-                            buildDataAllowedUse[build.BuildData.Id]--;
-                            currentSelectedBuildData = null;
+    //    //TODO: Remove it. Its here just to test
+    //    OnInput += (key) =>
+    //    {
+    //        if (key == KeyCode.Mouse0)
+    //        {
+    //            if (UIUtils.IsPointerOverUIElement())
+    //            {
+    //                cellSelector.DeselectCell(cellSelector.CurrentSelectedCell);
+    //                return;
+    //            }
 
-                        });
+    //            if (cellSelector.CurrentSelectedCell != null)
+    //            {
+    //                Cell cell = cellSelector.CurrentSelectedCell;
+    //                if (cell.IsEditable && cell.Build == null)
+    //                {
+    //                    BuildData buildData = currentSelectedBuildData;
+    //                    cell.CreateBuild(buildData, cellSelector.HoverCells, (entity) =>
+    //                    {
+    //                        var build = (IBuild)entity;
+    //                        turnController.AddBuild(build);
+    //                        buildDataAllowedUse[build.BuildData.Id]--;
+    //                        currentSelectedBuildData = null;
 
-                        turnController.DoTurn();
-                    }
-                }
-            }
+    //                    });
 
-            if (key == KeyCode.Mouse1)
-            {
-                if (cellSelector.CurrentSelectedCell != null)
-                {
-                    Cell cell = cellSelector.CurrentSelectedCell;
-                    if (cell.Build != null)
-                    {
-                        cell.RemoveBuild();
-                    }
-                }
-            }
+    //                    turnController.DoTurn();
+    //                }
+    //            }
+    //        }
 
-            if (key == KeyCode.Space)
-            {
+    //        if (key == KeyCode.Mouse1)
+    //        {
+    //            if (cellSelector.CurrentSelectedCell != null)
+    //            {
+    //                Cell cell = cellSelector.CurrentSelectedCell;
+    //                if (cell.Build != null)
+    //                {
+    //                    cell.RemoveBuild();
+    //                }
+    //            }
+    //        }
 
-                turnController.DoTurn();
-            }
-        };
+    //        if (key == KeyCode.Space)
+    //        {
 
-        playerCamera = Instantiate(playerCameraPrefab, transform);
+    //            turnController.DoTurn();
+    //        }
+    //    };
 
-        foreach (var buildDataInfo in levelData.BuildDataInfo)
-        {
-            buildDataAllowedUse[buildDataInfo.BuildData.Id] = buildDataInfo.UseCount;
-        }
-        playerCamera.Init(this, cellSelector, gameplayDatasheet.PlayerCameraSpd);
-        gameplayUI.Init(this, levelData);
-    }
+    //    playerCamera = Instantiate(playerCameraPrefab, transform);
 
-    public bool IsPossibleToSelectBuild(string buildID)
-    {
-        return buildDataAllowedUse[buildID] > 0;
-    }
+    //    foreach (var buildDataInfo in levelData.BuildDataInfo)
+    //    {
+    //        buildDataAllowedUse[buildDataInfo.BuildData.Id] = buildDataInfo.UseCount;
+    //    }
+    //    playerCamera.Init(this, cellSelector, gameplayDatasheet.PlayerCameraSpd);
+    //    gameplayUI.Init(this, levelData);
+    //}
 
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Mouse0))
-        {
-            OnInput?.Invoke(KeyCode.Mouse0);
-        }
-        if (Input.GetKeyDown(KeyCode.Mouse1))
-        {
-            OnInput?.Invoke(KeyCode.Mouse1);
-        }
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            OnInput?.Invoke(KeyCode.Space);
-        }
-    }
+    //public bool IsPossibleToSelectBuild(string buildID)
+    //{
+    //    return buildDataAllowedUse[buildID] > 0;
+    //}
 
-    public void ResetLevel()
-    {
-        resetLevel = true;
-        Instance = null;
-    }
+    //private void Update()
+    //{
+    //    if (Input.GetKeyDown(KeyCode.Mouse0))
+    //    {
+    //        OnInput?.Invoke(KeyCode.Mouse0);
+    //    }
+    //    if (Input.GetKeyDown(KeyCode.Mouse1))
+    //    {
+    //        OnInput?.Invoke(KeyCode.Mouse1);
+    //    }
+    //    if (Input.GetKeyDown(KeyCode.Space))
+    //    {
+    //        OnInput?.Invoke(KeyCode.Space);
+    //    }
+    //}
 
-    public void Quit()
-    {
+    //public void ResetLevel()
+    //{
+    //    resetLevel = true;
+    //    Instance = null;
+    //}
 
-        quit = true;
-        Instance = null;
+    //public void Quit()
+    //{
 
-    }
+    //    quit = true;
+    //    Instance = null;
+
+    //}
 }

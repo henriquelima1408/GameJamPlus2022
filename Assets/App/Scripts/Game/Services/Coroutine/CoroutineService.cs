@@ -1,5 +1,4 @@
 ﻿using App.Game.Services;
-using App.Game.Services.CoroutineServiceMock;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -11,6 +10,24 @@ namespace App.System.Utils
 {
     public class CoroutineService : MonoBehaviour, ICoroutineService
     {
+        public class CoroutineInfo {
+
+            readonly IAsyncOperation<string> asyncOperation;
+            readonly string coroutineID;
+
+            public CoroutineInfo(string coroutineID, IAsyncOperation<string> asyncOperation)
+            {
+                this.asyncOperation = asyncOperation;
+                this.coroutineID = coroutineID;
+            }
+
+            public IAsyncOperation<string> AsyncOperation => asyncOperation;
+
+            public string CoroutineID => coroutineID;
+        }
+
+
+
         Dictionary<string, IEnumerator> coroutineDict = new Dictionary<string, IEnumerator>();
 
         public bool IsInitialized => true;
@@ -26,7 +43,7 @@ namespace App.System.Utils
             DontDestroyOnLoad(gameObject);
         }
 
-        public IAsyncOperation<string> AddCoroutine(IEnumerator enumerator)
+        public CoroutineInfo AddCoroutine(IEnumerator enumerator)
         {
             var stringBuilder = new StringBuilder();
             stringBuilder.Append(enumerator.GetHashCode());
@@ -39,8 +56,9 @@ namespace App.System.Utils
 
             StartCoroutine(enumerator);
 
-            return asyncCompletionSource;
+            return new CoroutineInfo(coroutineID, asyncCompletionSource);
         }
+
         public void RemoveCoroutine(string coroutineID)
         {
             StopCoroutine(coroutineDict[coroutineID]);
@@ -50,7 +68,7 @@ namespace App.System.Utils
         IEnumerator DoCoroutine(IEnumerator coroutine, string coroutineID, IAsyncCompletionSource<string> onFinish)
         {
             yield return coroutine;
-            onFinish.SetResult(coroutineID);            
+            onFinish?.SetResult(coroutineID);
         }
     }
 }

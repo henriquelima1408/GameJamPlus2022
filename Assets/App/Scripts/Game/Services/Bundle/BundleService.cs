@@ -58,7 +58,7 @@ namespace App.Game.Services
                     }
 
                     resultOperation?.SetResult(asset);
-                });
+                }).Catch((e) => Debug.LogException(e));
 
             return resultOperation;
         }

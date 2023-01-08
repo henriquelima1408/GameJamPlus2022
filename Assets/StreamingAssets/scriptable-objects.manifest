@@ -1,0 +1,23 @@
+ManifestFileVersion: 0
+CRC: 1604287134
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: e4cb9b6f26686d2a91ea0a6a6e3c6d2f
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 249678c66c9340c9ee4a91db281a3036
+HashAppended: 0
+ClassTypes:
+- Class: 114
+  Script: {fileID: 11500000, guid: 95547193353bdb6428215cf8ab7ef74b, type: 3}
+- Class: 115
+  Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers:
+- AssemblyName: Assembly-CSharp
+  ClassName: App.Game.Services.Context
+- AssemblyName: Assembly-CSharp
+  ClassName: App.Game.Services.ContextFilter
+Assets:
+- Assets/Context Filters.asset
+Dependencies: []

@@ -1,12 +1,10 @@
-﻿using App.System.Utils;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System;
 using UnityEngine;
 using UnityFx.Async;
+using System.Collections;
+using System.Collections.Generic;
 using UnityFx.Async.Promises;
-using App.Game.Services.SoudServiceMock;
-using System;
-using App.Game.Services.CoroutineServiceMock;
+
 
 namespace App.Game.Services
 {
@@ -97,7 +95,7 @@ namespace App.Game.Services
                     {
                         ResetAudioSource(audioSource);
                         bgmSourcePool.Enqueue(audioSource);
-                    });
+                    }).Catch((e) => Debug.LogException(e));
             }
 
         }
@@ -122,7 +120,7 @@ namespace App.Game.Services
             {
                 ResetAudioSource(audioSource);
                 sfxSourcePool.Enqueue(audioSource);
-            });
+            }).Catch((e) => Debug.LogException(e));
         }
 
         public void PauseAllSFX(bool state)
@@ -163,8 +161,8 @@ namespace App.Game.Services
 
             var asyncCompletionSource = new AsyncCompletionSource<AudioSource>();
 
-            coroutineService.AddCoroutine(WaitAudioSourceFinishPlay(asyncCompletionSource, audioSource)).
-                Then((coroutineID) => coroutineService.RemoveCoroutine(coroutineID));
+            coroutineService.AddCoroutine(WaitAudioSourceFinishPlay(asyncCompletionSource, audioSource)).AsyncOperation.
+                Then((coroutineID) => coroutineService.RemoveCoroutine(coroutineID)).Catch((e) => Debug.LogException(e));
 
             return asyncCompletionSource;
         }

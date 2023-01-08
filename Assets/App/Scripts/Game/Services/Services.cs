@@ -1,13 +1,10 @@
-﻿using App.Game.Services.CoroutineServiceMock;
-using App.Game.Services.LevelServiceMock;
-using App.Game.Services.SoudServiceMock;
-using App.System.Utils;
-using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System;
 using UnityEngine;
 using UnityFx.Async;
+using App.System.Utils;
+using System.Collections;
 using UnityFx.Async.Promises;
+using System.Collections.Generic;
 
 namespace App.Game.Services
 {
@@ -15,7 +12,6 @@ namespace App.Game.Services
     {
         static Services instance;
         public static Services Instance { get => instance; }
-
 
         readonly Dictionary<Type, IService> services = new Dictionary<Type, IService>();
 
@@ -61,12 +57,17 @@ namespace App.Game.Services
         {
             var coroutineHelper = new GameObject("CoroutineHelper").AddComponent<CoroutineService>();
             coroutineHelper.transform.parent = transform;
+
+            var updaterService = new GameObject("UpdaterService").AddComponent<UpdaterService>();
+            updaterService.transform.parent = transform;
+
+            services.Add(typeof(IUpdaterService), updaterService);
             services.Add(typeof(ICoroutineService), coroutineHelper);
-
             services.Add(typeof(IBundleService), new BundleService());
-            services.Add(typeof(ISoundService), new SoundService(GetService<ICoroutineService>()));            
-
+            services.Add(typeof(ISoundService), new SoundService(GetService<ICoroutineService>()));
             services.Add(typeof(ILevelSelectorService), new LevelSelectorService(GetService<IBundleService>()));
+            services.Add(typeof(ISceneLoaderService), new SceneLoaderService());
+            services.Add(typeof(IContextService), new ContextService(GetService<IBundleService>()));
         }
 
         public IAsyncOperation<T> GetService<T>()
@@ -88,11 +89,13 @@ namespace App.Game.Services
             else
             {
                 var coroutineHelper = GetService<CoroutineService>().Result as CoroutineService;
+                var serviceCoroutineTuple = coroutineHelper.AddCoroutine(ServiceRequest(serviceRequest, services[typeof(T)]));
 
-                coroutineHelper.AddCoroutine(ServiceRequest(serviceRequest, services[typeof(T)])).
-                    Then((coroutineID) => coroutineHelper.RemoveCoroutine(coroutineID));
+                serviceCoroutineTuple.AsyncOperation.Then((coroutineID) =>
+                {
+                    coroutineHelper.RemoveCoroutine(coroutineID);
+                }).Catch((e) => Debug.LogException(e));
             }
-
             return serviceRequest;
         }
 

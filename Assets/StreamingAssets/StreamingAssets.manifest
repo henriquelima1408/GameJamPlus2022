@@ -1,0 +1,13 @@
+ManifestFileVersion: 0
+CRC: 2433706595
+AssetBundleManifest:
+  AssetBundleInfos:
+    Info_0:
+      Name: level-data
+      Dependencies: {}
+    Info_1:
+      Name: scriptable-objects
+      Dependencies: {}
+    Info_2:
+      Name: screens
+      Dependencies: {}
